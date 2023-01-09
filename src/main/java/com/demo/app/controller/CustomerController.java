@@ -5,6 +5,8 @@ import com.demo.app.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @RestController
 public class CustomerController {
 
@@ -12,7 +14,8 @@ public class CustomerController {
     private CustomerService customerService;
 
     @PostMapping("/create")
-    public CreateCustomerDto createCustomer(@RequestBody CreateCustomerDto customerDto) {
+    public CreateCustomerDto createCustomer(@RequestBody @Valid CreateCustomerDto customerDto) {
         return customerService.createCustomer(customerDto);
     }
+
 }
