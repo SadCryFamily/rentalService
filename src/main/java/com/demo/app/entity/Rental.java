@@ -1,13 +1,17 @@
 package com.demo.app.entity;
 
+import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Date;
 
 @Entity
+@EntityListeners(AuditingEntityListener.class)
+@Data
 @Table(name = "rental")
 public class Rental {
 
@@ -43,4 +47,7 @@ public class Rental {
     @LastModifiedDate
     @Column(name = "rental_updated_at")
     private Date rentalUpdatedAt;
+
+    @Column(name = "is_deleted", columnDefinition = "bool default false")
+    private boolean isDeleted;
 }
