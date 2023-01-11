@@ -20,6 +20,128 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
+
+        <addColumn tableName="customer">
+            <column name="password" type="text">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="customer_username" type="text">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="2" author="Semen Gulenko">
+
+        <addColumn tableName="customer">
+            <column name="email" type="text">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="created_at" type="date">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="updated_at" type="date">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+
+    </changeSet>
+
+    <changeSet id="3" author="Semen Gulenko">
+        <addUniqueConstraint tableName="customer" columnNames="email"/>
+    </changeSet>
+
+    <changeSet id="4" author="Semen Gulenko">
+        <createTable tableName="rental">
+            <column name="rental_id" type="bigserial">
+                <constraints primaryKeyName="pk_rental_id" primaryKey="true"/>
+            </column>
+
+            <column name="rental_name" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="rental_city" type="varchar(30)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="rental_address" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="rental_description" type="text">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="rental_area" type="integer">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="rental_price" type="decimal">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="rental_created_at" type="date">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="rental_updated_at" type="date">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="is_deleted" type="boolean" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="5" author="Semen Gulenko">
+        <createTable tableName="roles">
+            <column name="role_id" type="bigserial">
+                <constraints primaryKeyName="pk_role_id" primaryKey="true"/>
+            </column>
+
+            <column name="role_name" type="text">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="6" author="Semen Gulenko">
+        <createTable tableName="customer_roles">
+            <column name="id" type="bigserial">
+                <constraints primaryKeyName="pk_customer_roles_id" primaryKey="true"/>
+            </column>
+
+            <column name="customer_id" type="bigint">
+                <constraints foreignKeyName="fk_customer_id" references="customer(customer_id)"/>
+            </column>
+
+            <column name="role_id" type="bigint">
+                <constraints foreignKeyName="fk_role_id" references="roles(role_id)"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="7" author="Semen Gulenko">
+        <insert tableName="roles">
+            <column name="role_id" value="1"/>
+            <column name="role_name" value="ROLE_USER"/>
+        </insert>
+
+        <insert tableName="roles">
+            <column name="role_id" value="2"/>
+            <column name="role_name" value="ROLE_MODERATOR"/>
+        </insert>
+
+        <insert tableName="roles">
+            <column name="role_id" value="3"/>
+            <column name="role_name" value="ROLE_ADMIN"/>
+        </insert>
+
     </changeSet>
 
 </databaseChangeLog>
