@@ -62,4 +62,14 @@ public class CustomerAdvice {
                 new HttpHeaders(), HttpStatus.NOT_ACCEPTABLE);
     }
 
+    @ExceptionHandler({SendMessageException.class})
+    public ResponseEntity<Map<String, List<String>>> handleSendMessageException
+            (SendMessageException e) {
+
+        List<String> errorsList = Collections.singletonList(e.getMessage());
+
+        return new ResponseEntity<>(ErrorsMapperUtil.getErrorsMap(errorsList),
+                new HttpHeaders(), HttpStatus.BAD_REQUEST);
+    }
+
 }

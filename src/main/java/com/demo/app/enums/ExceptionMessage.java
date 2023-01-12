@@ -9,6 +9,8 @@ public enum ExceptionMessage {
 
     NULL_DTO_CREATION("Customer cant be null"),
 
+    ERROR_MAIL_MESSAGE("cant sent message to invalid addressee or mail attachment is corrupted"),
+
     WRONG_ACTIVATION_DATA("Activation failed. Wrong username or activation code");
 
     private String exceptionMessage;
