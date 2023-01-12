@@ -1,8 +1,9 @@
 package com.demo.app.config;
 
-import com.demo.app.config.jwt.AuthEntryPointJwt;
-import com.demo.app.config.jwt.AuthTokenFilter;
+import com.demo.app.auth.jwt.AuthEntryPointJwt;
+import com.demo.app.auth.jwt.AuthTokenFilter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -30,6 +31,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private UserDetailsService userDetailsService;
 
     @Autowired
+    @Qualifier("authEntryPointJwt")
     private AuthEntryPointJwt unauthorizedHandler;
 
     @Bean
@@ -60,9 +62,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests()
-                .antMatchers("/register**").permitAll()
-                .antMatchers("/my**").permitAll()
-                .antMatchers("/login**").permitAll()
+                .antMatchers("/signup**").permitAll()
+                .antMatchers("/signin**").permitAll()
+                .antMatchers("/activate").permitAll()
                 .anyRequest().authenticated();
 
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);

@@ -6,18 +6,18 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.math.BigDecimal;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class LoginCustomerDto {
+public class ActivateCustomerDto {
 
     @NotNull(message = "Username cant be null")
-    @Size(min = 5, max = 30, message = "Username must be from 5 to 30")
-    private String customerUsername;
+    @Size(min = 5, message = "Username must be longer than 5")
+    private String username;
 
-    @NotNull(message = "Password cant be null")
-    @Size(min = 7, max = 30, message = "Password must be from 7 to 30")
-    private String customerPassword;
+    @NotNull(message = "Activation code cant be null")
+    private BigDecimal activationCode;
 
 }

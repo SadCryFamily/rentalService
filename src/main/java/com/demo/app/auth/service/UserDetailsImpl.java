@@ -1,12 +1,12 @@
 package com.demo.app.auth.service;
 
 import com.demo.app.entity.Customer;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.EqualsAndHashCode;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,8 +24,11 @@ public class UserDetailsImpl implements UserDetails {
 
     private String customerEmail;
 
-    @JsonIgnore
     private String customerPassword;
+
+    private boolean isActivated;
+
+    private BigDecimal activationCode;
 
     private Collection<? extends GrantedAuthority> authorities;
 
@@ -33,6 +36,7 @@ public class UserDetailsImpl implements UserDetails {
     public UserDetailsImpl(Long customerId, String customerFirstName,
                            String customerLastName, String customerUsername,
                            String customerEmail, String customerPassword,
+                           boolean isActivated, BigDecimal activationCode,
                            Collection<? extends GrantedAuthority> authorities) {
 
         this.customerId = customerId;
@@ -41,6 +45,8 @@ public class UserDetailsImpl implements UserDetails {
         this.customerUsername = customerUsername;
         this.customerEmail = customerEmail;
         this.customerPassword = customerPassword;
+        this.isActivated = isActivated;
+        this.activationCode = activationCode;
         this.authorities = authorities;
     }
 
@@ -56,7 +62,17 @@ public class UserDetailsImpl implements UserDetails {
                 customer.getCustomerUsername(),
                 customer.getCustomerEmail(),
                 customer.getCustomerPassword(),
+                customer.isActivated(),
+                customer.getActivationCode(),
                 authorities);
+    }
+
+    public BigDecimal getActivationCode() {
+        return activationCode;
+    }
+
+    public boolean isActivated() {
+        return isActivated;
     }
 
     @Override

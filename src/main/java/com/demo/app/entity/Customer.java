@@ -2,11 +2,14 @@ package com.demo.app.entity;
 
 import com.demo.app.auth.entity.Role;
 import lombok.Data;
+import lombok.Generated;
+import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -37,11 +40,18 @@ public class Customer {
     @Column(name = "password")
     private String customerPassword;
 
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "customer_roles",
             joinColumns = @JoinColumn(name = "customer_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
+
+    @Column(name = "activation_code")
+    private BigDecimal activationCode;
+
+    @Column(name = "is_activated", columnDefinition = "bool default false")
+    private boolean isActivated;
 
     @CreatedDate
     @Column(name = "created_at")

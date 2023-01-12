@@ -1,4 +1,4 @@
-package com.demo.app.config.jwt;
+package com.demo.app.auth.jwt;
 
 import com.demo.app.auth.service.UserDetailsImpl;
 import io.jsonwebtoken.Jwts;
