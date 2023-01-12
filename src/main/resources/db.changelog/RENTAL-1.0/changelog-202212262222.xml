@@ -156,4 +156,10 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="9" author="Semen Gulenko">
+        <addUniqueConstraint tableName="rental"
+                             constraintName="uk_city_address"
+                             columnNames="rental_city, rental_address"/>
+    </changeSet>
+
 </databaseChangeLog>

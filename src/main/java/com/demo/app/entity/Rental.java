@@ -1,6 +1,7 @@
 package com.demo.app.entity;
 
 import lombok.Data;
+import org.hibernate.validator.constraints.UniqueElements;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -12,7 +13,9 @@ import java.util.Date;
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 @Data
-@Table(name = "rental")
+@Table(name = "rental", uniqueConstraints = {
+        @UniqueConstraint(name = "uk_city_address", columnNames = {"rental_city", "rental_address"})
+})
 public class Rental {
 
     @Id
@@ -23,10 +26,10 @@ public class Rental {
     @Column(name = "rental_name")
     private String rentalName;
 
-    @Column(name = "rental_city")
+    @Column(name = "rental_city", unique = true)
     private String rentalCity;
 
-    @Column(name = "rental_address")
+    @Column(name = "rental_address", unique = true)
     private String rentalAddress;
 
     @Column(name = "rental_description")

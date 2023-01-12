@@ -1,6 +1,5 @@
 package com.demo.app.auth.service;
 
-import com.demo.app.enums.ExceptionMessage;
 import com.demo.app.auth.entity.CustomerRoles;
 import com.demo.app.auth.entity.Role;
 import com.demo.app.auth.jwt.JwtUtils;
@@ -10,10 +9,11 @@ import com.demo.app.dto.ActivateCustomerDto;
 import com.demo.app.dto.CreateCustomerDto;
 import com.demo.app.dto.LoginCustomerDto;
 import com.demo.app.entity.Customer;
+import com.demo.app.enums.ExceptionMessage;
 import com.demo.app.exception.*;
-import com.demo.app.service.EmailService;
 import com.demo.app.mapper.CustomerMapper;
 import com.demo.app.repository.CustomerRepository;
+import com.demo.app.service.EmailService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -61,7 +61,7 @@ public class AuthServiceImpl implements AuthService {
         Optional<CreateCustomerDto> optionalCustomerDto = Optional.ofNullable(customerDto);
 
         if (optionalCustomerDto.isEmpty()) {
-            throw new NullCustomerException(ExceptionMessage.NULL_DTO_CREATION.getExceptionMessage());
+            throw new NullCustomerException(ExceptionMessage.NULL_CUSTOMER_CREATION.getExceptionMessage());
         }
 
         String email = customerDto.getCustomerEmail();

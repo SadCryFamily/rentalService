@@ -16,8 +16,8 @@ public class RentalController {
     @Autowired
     private RentalService rentalService;
 
-    @PostMapping("/rentals/add")
-    public Rental createRental(@RequestBody @Valid CreateRentalDto rentalDto) {
+    @PostMapping("/rental")
+    public CreateRentalDto createRental(@RequestBody @Valid CreateRentalDto rentalDto) {
         return rentalService.createRental(rentalDto);
     }
 
