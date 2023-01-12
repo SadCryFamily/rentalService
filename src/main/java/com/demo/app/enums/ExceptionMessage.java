@@ -14,7 +14,9 @@ public enum ExceptionMessage {
 
     RENTAL_UNIQUE_CREATION("Rental already exists by given city and address"),
 
-    ERROR_MAIL_MESSAGE("cant sent message to invalid addressee or mail attachment is corrupted"),
+    ERROR_MAIL_MESSAGE("Cant sent message to invalid addressee or mail attachment is corrupted"),
+
+    NO_MY_RENTALS("Have no any rental to show"),
 
     WRONG_ACTIVATION_DATA("Activation failed. Wrong username or activation code");
 

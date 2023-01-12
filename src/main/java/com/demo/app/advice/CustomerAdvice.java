@@ -72,4 +72,14 @@ public class CustomerAdvice {
                 new HttpHeaders(), HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler({HaveNoRentalsException.class})
+    public ResponseEntity<Map<String, List<String>>> handleHaveNoRentalsException
+            (HaveNoRentalsException e) {
+
+        List<String> errorsList = Collections.singletonList(e.getMessage());
+
+        return new ResponseEntity<>(ErrorsMapperUtil.getErrorsMap(errorsList),
+                new HttpHeaders(), HttpStatus.NOT_FOUND);
+    }
+
 }

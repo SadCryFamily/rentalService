@@ -2,8 +2,6 @@ package com.demo.app.entity;
 
 import com.demo.app.auth.entity.Role;
 import lombok.Data;
-import lombok.Generated;
-import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -16,8 +14,10 @@ import java.util.Set;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-@Table(name = "customer")
 @Data
+@Table(name = "customer", uniqueConstraints = {
+        @UniqueConstraint(name = "uk_mail_username", columnNames = {"customer_username", "email"})
+})
 public class Customer {
 
     @Id
@@ -46,6 +46,12 @@ public class Customer {
             joinColumns = @JoinColumn(name = "customer_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "customer_rental",
+            joinColumns = @JoinColumn(name = "customer_id"),
+            inverseJoinColumns = @JoinColumn(name = "rental_id"))
+    private Set<Rental> rentals = new HashSet<>();
 
     @Column(name = "activation_code")
     private BigDecimal activationCode;

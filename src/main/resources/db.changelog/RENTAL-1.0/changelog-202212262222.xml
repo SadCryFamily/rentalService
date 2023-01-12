@@ -162,4 +162,20 @@
                              columnNames="rental_city, rental_address"/>
     </changeSet>
 
+    <changeSet id="10" author="Semen Gulenko">
+        <createTable tableName="customer_rental">
+            <column name="id" type="bigserial">
+                <constraints primaryKeyName="pk_id" primaryKey="true"/>
+            </column>
+
+            <column name="customer_id" type="bigint">
+                <constraints foreignKeyName="fk_customer_id" references="customer(customer_id)"/>
+            </column>
+
+            <column name="rental_id" type="bigint">
+                <constraints foreignKeyName="fk_rental_id" references="rental(rental_id)"/>
+            </column>
+        </createTable>
+    </changeSet>
+
 </databaseChangeLog>

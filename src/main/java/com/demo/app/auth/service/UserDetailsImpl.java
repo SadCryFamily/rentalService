@@ -1,6 +1,7 @@
 package com.demo.app.auth.service;
 
 import com.demo.app.entity.Customer;
+import com.demo.app.entity.Rental;
 import lombok.EqualsAndHashCode;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -9,6 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @EqualsAndHashCode
@@ -28,15 +30,18 @@ public class UserDetailsImpl implements UserDetails {
 
     private boolean isActivated;
 
+    private Set<Rental> rentals;
+
     private BigDecimal activationCode;
 
     private Collection<? extends GrantedAuthority> authorities;
 
 
-    public UserDetailsImpl(Long customerId, String customerFirstName,
-                           String customerLastName, String customerUsername,
-                           String customerEmail, String customerPassword,
-                           boolean isActivated, BigDecimal activationCode,
+    public UserDetailsImpl(Long customerId,
+                           String customerFirstName, String customerLastName,
+                           String customerUsername, String customerEmail,
+                           String customerPassword, boolean isActivated,
+                           Set<Rental> rentals, BigDecimal activationCode,
                            Collection<? extends GrantedAuthority> authorities) {
 
         this.customerId = customerId;
@@ -46,6 +51,7 @@ public class UserDetailsImpl implements UserDetails {
         this.customerEmail = customerEmail;
         this.customerPassword = customerPassword;
         this.isActivated = isActivated;
+        this.rentals = rentals;
         this.activationCode = activationCode;
         this.authorities = authorities;
     }
@@ -63,12 +69,13 @@ public class UserDetailsImpl implements UserDetails {
                 customer.getCustomerEmail(),
                 customer.getCustomerPassword(),
                 customer.isActivated(),
+                customer.getRentals(),
                 customer.getActivationCode(),
                 authorities);
     }
 
-    public BigDecimal getActivationCode() {
-        return activationCode;
+    public Set<Rental> getRentals() {
+        return rentals;
     }
 
     public boolean isActivated() {
