@@ -30,9 +30,9 @@ public class CustomerManagementServiceImpl implements CustomerService {
 
         if (customerDtoOptional.isPresent()) {
 
-            String checkedEmail = customerDtoOptional.get().getEmail();
+            String checkedEmail = customerDtoOptional.get().getCustomerEmail();
 
-            if (!customerRepository.existsByEmail(checkedEmail)) {
+            if (!customerRepository.existsByCustomerEmail(checkedEmail)) {
 
                 CreateCustomerDto createCustomerDto
                         = customerDtoOptional.get();
