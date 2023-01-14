@@ -5,7 +5,6 @@ import com.demo.app.util.ErrorsMapperUtil;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -80,6 +79,55 @@ public class CustomerAdvice {
 
         return new ResponseEntity<>(ErrorsMapperUtil.getErrorsMap(errorsList),
                 new HttpHeaders(), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler({NullUpdateCustomerException.class})
+    public ResponseEntity<Map<String, List<String>>> handleNullUpdateCustomerException
+            (NullUpdateCustomerException e) {
+
+        List<String> errorsList = Collections.singletonList(e.getMessage());
+
+        return new ResponseEntity<>(ErrorsMapperUtil.getErrorsMap(errorsList),
+                new HttpHeaders(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler({UpdateNonExistingCustomerException.class})
+    public ResponseEntity<Map<String, List<String>>> handleUpdateNonExistingCustomerException
+            (UpdateNonExistingCustomerException e) {
+
+        List<String> errorsList = Collections.singletonList(e.getMessage());
+
+        return new ResponseEntity<>(ErrorsMapperUtil.getErrorsMap(errorsList),
+                new HttpHeaders(), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler({CustomerAlreadyDeletedException.class})
+    public ResponseEntity<Map<String, List<String>>> handleCustomerAlreadyDeletedException
+            (CustomerAlreadyDeletedException e) {
+
+        List<String> errorsList = Collections.singletonList(e.getMessage());
+
+        return new ResponseEntity<>(ErrorsMapperUtil.getErrorsMap(errorsList),
+                new HttpHeaders(), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler({DeleteNonExistingCustomerException.class})
+    public ResponseEntity<Map<String, List<String>>> handleDeleteNonExistingCustomerException
+            (DeleteNonExistingCustomerException e) {
+
+        List<String> errorsList = Collections.singletonList(e.getMessage());
+
+        return new ResponseEntity<>(ErrorsMapperUtil.getErrorsMap(errorsList),
+                new HttpHeaders(), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler({AccountLockedException.class})
+    public ResponseEntity<Map<String, List<String>>> handleAccountLockedException (AccountLockedException e) {
+
+        List<String> errorsList = Collections.singletonList(e.getMessage());
+
+        return new ResponseEntity<>(ErrorsMapperUtil.getErrorsMap(errorsList),
+                new HttpHeaders(), HttpStatus.LOCKED);
     }
 
 }

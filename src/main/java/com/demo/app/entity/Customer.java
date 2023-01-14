@@ -59,14 +59,17 @@ public class Customer {
     @Column(name = "is_activated", columnDefinition = "bool default false")
     private boolean isActivated;
 
+    @Column(name = "is_deleted", columnDefinition = "bool default false")
+    private boolean isDeleted;
+
     @CreatedDate
     @Column(name = "created_at")
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
 
     @LastModifiedDate
     @Column(name = "updated_at")
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date updatedAt;
 
 }

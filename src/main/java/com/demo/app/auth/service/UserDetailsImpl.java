@@ -2,10 +2,15 @@ package com.demo.app.auth.service;
 
 import com.demo.app.entity.Customer;
 import com.demo.app.entity.Rental;
+import com.demo.app.enums.ExceptionMessage;
+import com.demo.app.exception.AccountLockedException;
 import lombok.EqualsAndHashCode;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 
 import java.math.BigDecimal;
 import java.util.Collection;
@@ -30,6 +35,8 @@ public class UserDetailsImpl implements UserDetails {
 
     private boolean isActivated;
 
+    private boolean isDeleted;
+
     private Set<Rental> rentals;
 
     private BigDecimal activationCode;
@@ -37,12 +44,11 @@ public class UserDetailsImpl implements UserDetails {
     private Collection<? extends GrantedAuthority> authorities;
 
 
-    public UserDetailsImpl(Long customerId,
-                           String customerFirstName, String customerLastName,
-                           String customerUsername, String customerEmail,
-                           String customerPassword, boolean isActivated,
-                           Set<Rental> rentals, BigDecimal activationCode,
-                           Collection<? extends GrantedAuthority> authorities) {
+    public UserDetailsImpl(Long customerId, String customerFirstName,
+                           String customerLastName, String customerUsername,
+                           String customerEmail, String customerPassword,
+                           boolean isActivated, boolean isDeleted, Set<Rental> rentals,
+                           BigDecimal activationCode, Collection<? extends GrantedAuthority> authorities) {
 
         this.customerId = customerId;
         this.customerFirstName = customerFirstName;
@@ -51,6 +57,7 @@ public class UserDetailsImpl implements UserDetails {
         this.customerEmail = customerEmail;
         this.customerPassword = customerPassword;
         this.isActivated = isActivated;
+        this.isDeleted = isDeleted;
         this.rentals = rentals;
         this.activationCode = activationCode;
         this.authorities = authorities;
@@ -69,9 +76,18 @@ public class UserDetailsImpl implements UserDetails {
                 customer.getCustomerEmail(),
                 customer.getCustomerPassword(),
                 customer.isActivated(),
+                customer.isDeleted(),
                 customer.getRentals(),
                 customer.getActivationCode(),
                 authorities);
+    }
+
+    public Long getCustomerId() {
+        return customerId;
+    }
+
+    public String getCustomerEmail() {
+        return customerEmail;
     }
 
     public Set<Rental> getRentals() {
@@ -104,7 +120,7 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return !this.isDeleted;
     }
 
     @Override
@@ -114,7 +130,7 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return this.isActivated;
     }
 
 }

@@ -10,6 +10,8 @@ public enum ExceptionMessage {
 
     NULL_CUSTOMER_CREATION("Customer cant be null"),
 
+    NULL_CUSTOMER_UPDATE("Customer cant be null"),
+
     NULL_RENTAL_CREATION("Rental cant be null"),
 
     RENTAL_UNIQUE_CREATION("Rental already exists by given city and address"),
@@ -17,6 +19,16 @@ public enum ExceptionMessage {
     ERROR_MAIL_MESSAGE("Cant sent message to invalid addressee or mail attachment is corrupted"),
 
     NO_MY_RENTALS("Have no any rental to show"),
+
+    NON_EXISTED_CUSTOMER("Cant update data for non-existed customer"),
+
+    NON_EXISTED_RENTAL("Can't delete someone else's rental"),
+
+    DELETE_NON_EXISTED_CUSTOMER("Cant delete non-existed customer"),
+
+    ALREADY_DELETED_CUSTOMER("Given customer already deleted"),
+
+    LOCKED_CUSTOMER_ACCOUNT("Given account is locked. Create new or try to login again"),
 
     WRONG_ACTIVATION_DATA("Activation failed. Wrong username or activation code");
 

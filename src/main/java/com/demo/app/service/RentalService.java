@@ -11,4 +11,6 @@ public interface RentalService {
 
     Set<ViewRentalDto> getAllCustomerRentals();
 
+    String deleteRental(Long rentalId);
+
 }
