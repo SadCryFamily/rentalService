@@ -43,11 +43,11 @@
                 <constraints nullable="false"/>
             </column>
 
-            <column name="created_at" type="date">
+            <column name="created_at" type="timestamp">
                 <constraints nullable="false"/>
             </column>
 
-            <column name="updated_at" type="date">
+            <column name="updated_at" type="timestamp">
                 <constraints nullable="false"/>
             </column>
         </addColumn>
@@ -151,6 +151,10 @@
     <changeSet id="8" author="Semen Gulenko">
         <addColumn tableName="customer">
             <column name="is_activated" type="boolean" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="is_deleted" type="boolean" defaultValueBoolean="false">
                 <constraints nullable="false"/>
             </column>
         </addColumn>

@@ -7,4 +7,6 @@ public interface CustomerRepositoryCriteria {
     @Modifying(flushAutomatically = true)
     boolean updateIsCustomerActivatedByUsername(String username);
 
+    @Modifying(flushAutomatically = true)
+    boolean updateIsCustomerDeletedByUsername(String username);
 }

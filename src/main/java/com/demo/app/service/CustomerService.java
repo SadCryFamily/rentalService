@@ -1,9 +1,11 @@
 package com.demo.app.service;
 
-import com.demo.app.dto.CreateCustomerDto;
+import com.demo.app.dto.UpdateCustomerDto;
 
 public interface CustomerService {
 
-    CreateCustomerDto createCustomer(CreateCustomerDto customerDto);
+    UpdateCustomerDto updateCustomer(UpdateCustomerDto customerDto);
+
+    boolean deleteCustomer();
 
 }

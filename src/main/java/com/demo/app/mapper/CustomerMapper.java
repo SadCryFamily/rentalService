@@ -1,6 +1,7 @@
 package com.demo.app.mapper;
 
 import com.demo.app.dto.CreateCustomerDto;
+import com.demo.app.dto.UpdateCustomerDto;
 import com.demo.app.entity.Customer;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
@@ -13,5 +14,7 @@ public interface CustomerMapper {
     CreateCustomerDto toCreateCustomerDto(Customer customer);
 
     Customer toCustomer(CreateCustomerDto customerDto);
+
+    Customer toCustomer(UpdateCustomerDto customerDto);
 
 }

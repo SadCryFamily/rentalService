@@ -6,9 +6,7 @@ import com.demo.app.dto.ViewRentalDto;
 import com.demo.app.entity.Customer;
 import com.demo.app.entity.Rental;
 import com.demo.app.enums.ExceptionMessage;
-import com.demo.app.exception.CreateExistingRentalException;
-import com.demo.app.exception.HaveNoRentalsException;
-import com.demo.app.exception.NullRentalException;
+import com.demo.app.exception.*;
 import com.demo.app.mapper.RentalMapper;
 import com.demo.app.repository.CustomerRepository;
 import com.demo.app.repository.RentalRepository;
@@ -19,7 +17,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.Date;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -57,22 +57,33 @@ public class RentalServiceImpl implements RentalService {
 
             UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 
-            Rental rental = rentalMapper.toRental(checkedRentalDto);
+            if (userDetails.isAccountNonLocked()) {
 
-            rentalRepository.save(rental);
+                Rental rental = rentalMapper.toRental(checkedRentalDto);
 
-            Customer customer =
-                    customerRepository.findByCustomerUsername(userDetails.getUsername());
+                rentalRepository.save(rental);
 
-            Set<Rental> customerRentalsSet = customer.getRentals();
-            customerRentalsSet.add(rental);
+                Customer customer =
+                        customerRepository.findByCustomerUsername(userDetails.getUsername());
 
-            customer.setRentals(customerRentalsSet);
+                Set<Rental> customerRentalsSet = customer.getRentals();
+                customerRentalsSet.add(rental);
 
-            log.info("CREATED Rental by CITY: {}, ADDRESS: {}",
-                    rental.getRentalCity(), rental.getRentalAddress());
+                customer.setRentals(customerRentalsSet);
 
-            return checkedRentalDto;
+                log.info("CREATED Rental by CITY: {}, ADDRESS: {}",
+                        rental.getRentalCity(), rental.getRentalAddress());
+
+                return checkedRentalDto;
+
+            } else {
+
+                log.error("ERROR CREATING Rental by CITY: {}, ADDRESS: {} AT TIME: {}",
+                        checkedRentalDto.getRentalCity(), checkedRentalDto.getRentalAddress(), new Date());
+
+                throw new AccountLockedException(ExceptionMessage.LOCKED_CUSTOMER_ACCOUNT.getExceptionMessage());
+
+            }
 
         }
 
@@ -92,14 +103,62 @@ public class RentalServiceImpl implements RentalService {
 
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 
-        Set<Rental> rentals = userDetails.getRentals();
+        if (userDetails.isAccountNonLocked()) {
 
-        if (rentals.isEmpty()) {
-            throw new HaveNoRentalsException(ExceptionMessage.NO_MY_RENTALS.getExceptionMessage());
+            Long customerId = userDetails.getCustomerId();
+
+            Set<Rental> rentals = rentalRepository.getAllRentalsByIsDeletedFalse(customerId);
+
+            if (rentals.isEmpty()) {
+                throw new HaveNoRentalsException(ExceptionMessage.NO_MY_RENTALS.getExceptionMessage());
+            }
+
+            return rentals.stream()
+                    .map(rental -> rentalMapper.toViewRentalDto(rental))
+                    .collect(Collectors.toSet());
         }
 
-        return rentals.stream()
-                .map(rental -> rentalMapper.toViewRentalDto(rental))
-                .collect(Collectors.toSet());
+        log.error("ERROR GETTING Rental for Customer by USERNAME: {}, AT TIME: {}",
+                userDetails.getUsername(), new Date());
+
+        throw new AccountLockedException(ExceptionMessage.LOCKED_CUSTOMER_ACCOUNT.getExceptionMessage());
+
+    }
+
+    @Override
+    @Transactional
+    public String deleteRental(Long rentalId) {
+
+        Optional<Rental> optionalRental = rentalRepository.findById(rentalId);
+
+        if (optionalRental.isEmpty()) {
+            throw new NullRentalException(ExceptionMessage.NULL_RENTAL_CREATION.getExceptionMessage());
+        }
+
+        Authentication authentication =
+                SecurityContextHolder.getContext().getAuthentication();
+
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+
+        String username = userDetails.getUsername();
+        Long customerId = userDetails.getCustomerId();
+
+        if (rentalRepository.existsByCustomerIdAndRentalId(customerId, rentalId).isEmpty()) {
+            throw new DeleteNonExistingRentalException(ExceptionMessage.NON_EXISTED_RENTAL.getExceptionMessage());
+        }
+
+        if (customerRepository.existsByCustomerUsernameAndIsActivatedTrueAndIsDeletedFalse(username)) {
+
+            rentalRepository.updateIsDeletedByRentalId(rentalId);
+
+            log.info("DELETE Rental for Customer by USERNAME: {}, AT TIME: {}", username, new Date());
+
+            return "Rental deleted successfully";
+        }
+
+        log.error("ERROR DELETE Rental for Customer by USERNAME: {}, AT TIME: {}",
+                username, new Date());
+
+        throw new AccountLockedException(ExceptionMessage.LOCKED_CUSTOMER_ACCOUNT.getExceptionMessage());
     }
 }
