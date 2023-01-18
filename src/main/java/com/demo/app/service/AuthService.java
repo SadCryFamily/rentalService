@@ -1,4 +1,4 @@
-package com.demo.app.auth.service;
+package com.demo.app.service;
 
 import com.demo.app.auth.pojo.JwtResponse;
 import com.demo.app.dto.ActivateCustomerDto;

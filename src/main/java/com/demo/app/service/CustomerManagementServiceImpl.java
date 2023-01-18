@@ -1,6 +1,5 @@
 package com.demo.app.service;
 
-import com.demo.app.auth.service.UserDetailsImpl;
 import com.demo.app.dto.UpdateCustomerDto;
 import com.demo.app.entity.Customer;
 import com.demo.app.enums.ExceptionMessage;

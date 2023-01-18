@@ -1,6 +1,6 @@
 package com.demo.app.auth.jwt;
 
-import com.demo.app.auth.service.UserDetailsImpl;
+import com.demo.app.service.UserDetailsImpl;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;

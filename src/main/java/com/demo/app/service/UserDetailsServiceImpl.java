@@ -1,4 +1,4 @@
-package com.demo.app.auth.service;
+package com.demo.app.service;
 
 import com.demo.app.entity.Customer;
 import com.demo.app.repository.CustomerRepository;
@@ -9,7 +9,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-@Component
+@Component("userDetailsServiceBean")
 public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Autowired

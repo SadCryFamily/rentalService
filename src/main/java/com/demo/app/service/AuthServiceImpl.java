@@ -1,4 +1,4 @@
-package com.demo.app.auth.service;
+package com.demo.app.service;
 
 import com.demo.app.auth.entity.CustomerRoles;
 import com.demo.app.auth.entity.Role;
@@ -13,7 +13,6 @@ import com.demo.app.enums.ExceptionMessage;
 import com.demo.app.exception.*;
 import com.demo.app.mapper.CustomerMapper;
 import com.demo.app.repository.CustomerRepository;
-import com.demo.app.service.EmailService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -85,7 +84,7 @@ public class AuthServiceImpl implements AuthService {
             Customer logCustomer = customerRepository.save(customer);
 
             log.info("CREATED Customer by USERNAME: {}, AT TIME: {}",
-                    logCustomer.getCustomerUsername(), logCustomer.getCreatedAt());
+                    username, new Date());
 
             return "Customer successfully created!";
 
