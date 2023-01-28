@@ -12,21 +12,21 @@
                 <constraints primaryKey="true"/>
             </column>
 
-            <column name="first_name" type="text">
+            <column name="first_name" type="varchar(255)">
                 <constraints nullable="false"/>
             </column>
 
-            <column name="last_name" type="text">
+            <column name="last_name" type="varchar(255)">
                 <constraints nullable="false"/>
             </column>
         </createTable>
 
         <addColumn tableName="customer">
-            <column name="password" type="text">
+            <column name="password" type="varchar(255)">
                 <constraints nullable="false"/>
             </column>
 
-            <column name="customer_username" type="text">
+            <column name="customer_username" type="varchar(255)">
                 <constraints nullable="false"/>
             </column>
         </addColumn>
@@ -35,7 +35,7 @@
     <changeSet id="2" author="Semen Gulenko">
 
         <addColumn tableName="customer">
-            <column name="email" type="text">
+            <column name="email" type="varchar(255)">
                 <constraints nullable="false"/>
             </column>
 
@@ -76,7 +76,7 @@
                 <constraints nullable="false"/>
             </column>
 
-            <column name="rental_description" type="text">
+            <column name="rental_description" type="varchar(255)">
                 <constraints nullable="false"/>
             </column>
 
@@ -108,7 +108,7 @@
                 <constraints primaryKeyName="pk_role_id" primaryKey="true"/>
             </column>
 
-            <column name="role_name" type="text">
+            <column name="role_name" type="varchar(255)">
                 <constraints nullable="false"/>
             </column>
         </createTable>
@@ -121,11 +121,11 @@
             </column>
 
             <column name="customer_id" type="bigint">
-                <constraints foreignKeyName="fk_customer_id" references="customer(customer_id)"/>
+                <constraints foreignKeyName="fk_customer_role_id" references="customer(customer_id)"/>
             </column>
 
             <column name="role_id" type="bigint">
-                <constraints foreignKeyName="fk_role_id" references="roles(role_id)"/>
+                <constraints foreignKeyName="fk_role_customer_id" references="roles(role_id)"/>
             </column>
         </createTable>
     </changeSet>
@@ -173,11 +173,11 @@
             </column>
 
             <column name="customer_id" type="bigint">
-                <constraints foreignKeyName="fk_customer_id" references="customer(customer_id)"/>
+                <constraints foreignKeyName="fk_customer_rental_id" references="customer(customer_id)"/>
             </column>
 
             <column name="rental_id" type="bigint">
-                <constraints foreignKeyName="fk_rental_id" references="rental(rental_id)"/>
+                <constraints foreignKeyName="fk_rental_customer_id" references="rental(rental_id)"/>
             </column>
         </createTable>
     </changeSet>

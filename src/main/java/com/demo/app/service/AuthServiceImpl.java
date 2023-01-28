@@ -92,7 +92,7 @@ public class AuthServiceImpl implements AuthService {
 
             log.error("ERROR CREATING Customer by USERNAME : {}, AT TIME: {}", username, new Date());
 
-            throw new CreateExistingCustomerException("Customer already exists by given email or username");
+            throw new CreateExistingCustomerException(ExceptionMessage.ALREADY_DELETED_CUSTOMER.getExceptionMessage());
         }
 
     }

@@ -23,7 +23,7 @@ public class CustomerController {
     }
 
     @PreAuthorize(value = "hasRole('USER')")
-    @DeleteMapping("/delete")
+    @DeleteMapping("/profile")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public boolean deleteCustomer() {
         return customerService.deleteCustomer();

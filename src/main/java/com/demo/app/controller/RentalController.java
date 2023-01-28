@@ -26,7 +26,7 @@ public class RentalController {
 
     @GetMapping("/rental")
     @PreAuthorize(value = "hasRole('USER')")
-    @ResponseStatus(HttpStatus.FOUND)
+    @ResponseStatus(HttpStatus.OK)
     public Set<ViewRentalDto> getAllCustomerRentals() {
         return rentalService.getAllCustomerRentals();
     }

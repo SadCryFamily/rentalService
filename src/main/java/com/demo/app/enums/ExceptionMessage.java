@@ -6,6 +6,8 @@ public enum ExceptionMessage {
 
     NOT_AUTHORIZED("Cant reach resource while unauthorized"),
 
+    ALREADY_EXISTED_CUSTOMER("Customer already exists by given email or username"),
+
     NULL_DTO_ACTIVATION("Activation entity cant be null"),
 
     NULL_CUSTOMER_CREATION("Customer cant be null"),
