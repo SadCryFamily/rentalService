@@ -23,6 +23,11 @@
 		<validation-starter.version>3.0.1</validation-starter.version>
 		<jpa-starter.version>2.7.3</jpa-starter.version>
 		<json-token.version>0.9.1</json-token.version>
+		<h2-db.version>2.1.214</h2-db.version>
+		<starter-security.version>2.7.5</starter-security.version>
+		<junit-suite.version>1.8.1</junit-suite.version>
+		<starter-mail.version>2.5.6</starter-mail.version>
+		<spring-security-test.version>5.3.13.RELEASE</spring-security-test.version>
 	</properties>
 
 	<dependencies>
