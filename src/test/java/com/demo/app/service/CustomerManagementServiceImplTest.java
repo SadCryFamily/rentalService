@@ -5,7 +5,7 @@ import com.demo.app.dto.UpdateCustomerDto;
 import com.demo.app.entity.Customer;
 import com.demo.app.mapper.CustomerMapper;
 import com.demo.app.repository.CustomerRepository;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

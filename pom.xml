@@ -16,6 +16,7 @@
 
 	<properties>
 		<java.version>11</java.version>
+		<maven-surefire.version>2.22.2</maven-surefire.version>
 		<org.projectlombok.version>1.18.20</org.projectlombok.version>
 		<org.mapstruct.version>1.4.1.Final</org.mapstruct.version>
 		<liquibase.version>4.18.0</liquibase.version>
@@ -62,7 +63,7 @@
 		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
-			<version>2.1.214</version>
+			<version>${h2-db.version}</version>
 			<scope>test</scope>
 		</dependency>
 
@@ -93,13 +94,19 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
-			<version>2.7.5</version>
+			<version>${starter-security.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.junit.platform</groupId>
+			<artifactId>junit-platform-suite-engine</artifactId>
+			<version>${junit-suite.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-mail</artifactId>
-			<version>2.5.6</version>
+			<version>${starter-mail.version}</version>
 		</dependency>
 
 		<dependency>
@@ -111,14 +118,14 @@
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-test</artifactId>
-			<version>5.3.13.RELEASE</version>
+			<version>${spring-security-test.version}</version>
 			<scope>test</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.13.2</version>
+			<version>${junit.version}</version>
 			<scope>test</scope>
 		</dependency>
 
@@ -165,6 +172,18 @@
 							<version>${org.mapstruct.version}</version>
 						</path>
 					</annotationProcessorPaths>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>${maven-surefire.version}</version>
+				<configuration>
+					<includes>
+						<include>com.demo.app.suite.TestUnitSuite</include>
+						<include>com.demo.app.suite.TestIntegrationSuite</include>
+					</includes>
 				</configuration>
 			</plugin>
 		</plugins>

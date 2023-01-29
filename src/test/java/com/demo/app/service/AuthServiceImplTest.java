@@ -9,8 +9,8 @@ import com.demo.app.auth.repository.RoleRepository;
 import com.demo.app.dto.ActivateCustomerDto;
 import com.demo.app.dto.CreateCustomerDto;
 import com.demo.app.dto.LoginCustomerDto;
+import org.junit.jupiter.api.Test;
 import com.demo.app.repository.CustomerRepository;
-import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -18,7 +18,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.math.BigDecimal;
@@ -30,7 +29,7 @@ import static org.mockito.Mockito.when;
 
 @SpringBootTest
 @RunWith(SpringJUnit4ClassRunner.class)
-public class AuthServiceImplTest {
+class AuthServiceImplTest {
 
     @Autowired
     private AuthService authService;
@@ -133,4 +132,5 @@ public class AuthServiceImplTest {
         assertEquals(expectedResponse, actualResponse);
 
     }
+
 }
