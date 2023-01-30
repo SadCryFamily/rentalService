@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.mail.MessagingException;
 import javax.validation.Valid;
+import java.io.FileNotFoundException;
 
 @RestController
 public class AuthController {
@@ -22,7 +24,7 @@ public class AuthController {
 
     @PostMapping("/signup")
     @ResponseStatus(HttpStatus.CREATED)
-    public String registerCustomer(@RequestBody @Valid CreateCustomerDto customerDto) {
+    public String registerCustomer(@RequestBody @Valid CreateCustomerDto customerDto) throws MessagingException, FileNotFoundException {
         return authService.registerCustomer(customerDto);
     }
 

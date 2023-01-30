@@ -23,6 +23,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.mail.MessagingException;
+import java.io.FileNotFoundException;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Optional;
@@ -55,7 +57,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     @Transactional
-    public String registerCustomer(CreateCustomerDto customerDto) {
+    public String registerCustomer(CreateCustomerDto customerDto) throws MessagingException, FileNotFoundException {
 
         Optional<CreateCustomerDto> optionalCustomerDto = Optional.ofNullable(customerDto);
 

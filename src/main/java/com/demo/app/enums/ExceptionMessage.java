@@ -20,6 +20,8 @@ public enum ExceptionMessage {
 
     ERROR_MAIL_MESSAGE("Cant sent message to invalid addressee or mail attachment is corrupted"),
 
+    IMAGE_FILE_NOT_FOUND("Cant find an additional email message file"),
+
     NO_MY_RENTALS("Have no any rental to show"),
 
     NON_EXISTED_CUSTOMER("Cant update data for non-existed customer"),
