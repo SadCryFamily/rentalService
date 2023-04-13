@@ -3,7 +3,7 @@ package com.demo.app.service;
 import com.demo.app.annotation.WithCustomMockUser;
 import com.demo.app.dto.CreateCustomerDto;
 import com.demo.app.dto.CreateRentalDto;
-import com.demo.app.dto.ViewRentalDto;
+import com.demo.app.dto.PreviewRentalDto;
 import com.demo.app.entity.Customer;
 import com.demo.app.entity.Rental;
 import com.demo.app.mapper.CustomerMapper;
@@ -22,8 +22,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.math.BigDecimal;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -118,11 +116,11 @@ public class RentalServiceImplTest {
 
         when(rentalRepository.getAllRentalsByIsDeletedFalse(anyLong())).thenReturn(mockRentals);
 
-        Set<ViewRentalDto> expectedSet = mockRentals.stream()
+        Set<PreviewRentalDto> expectedSet = mockRentals.stream()
                 .map(rental -> rentalMapper.toViewRentalDto(rental))
                 .collect(Collectors.toSet());
 
-        Set<ViewRentalDto> actualSet = rentalService.getAllCustomerRentals();
+        Set<PreviewRentalDto> actualSet = rentalService.getAllCustomerRentals();
 
         assertEquals(expectedSet, actualSet);
 

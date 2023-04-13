@@ -1,6 +1,7 @@
 package com.demo.app.service;
 
 import com.demo.app.dto.CreateRentalDto;
+import com.demo.app.dto.PreviewRentalDto;
 import com.demo.app.dto.ViewRentalDto;
 import com.demo.app.entity.Customer;
 import com.demo.app.entity.Rental;
@@ -94,8 +95,24 @@ public class RentalServiceImpl implements RentalService {
     }
 
     @Override
+    public ViewRentalDto retrieveRentalById(Long id) {
+        Rental rental = rentalRepository.findById(id).get();
+
+        return rentalMapper.toViewRentalDto(rental);
+    }
+
+    @Override
     @Transactional(readOnly = true)
-    public Set<ViewRentalDto> getAllCustomerRentals() {
+    public Set<PreviewRentalDto> getAllAvailableRentals() {
+        return rentalRepository.findAll()
+                .stream()
+                .map(entity -> rentalMapper.toPreviewRentalDto(entity))
+                .collect(Collectors.toSet());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Set<PreviewRentalDto> getAllCustomerRentals() {
 
         Authentication authentication =
                 SecurityContextHolder.getContext().getAuthentication();
@@ -113,7 +130,7 @@ public class RentalServiceImpl implements RentalService {
             }
 
             return rentals.stream()
-                    .map(rental -> rentalMapper.toViewRentalDto(rental))
+                    .map(rental -> rentalMapper.toPreviewRentalDto(rental))
                     .collect(Collectors.toSet());
         }
 

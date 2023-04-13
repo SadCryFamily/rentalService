@@ -1,5 +1,6 @@
 package com.demo.app.controller;
 
+import com.demo.app.dto.RetrieveCustomerDto;
 import com.demo.app.dto.UpdateCustomerDto;
 import com.demo.app.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,13 @@ public class CustomerController {
 
     @Autowired
     private CustomerService customerService;
+
+    @PreAuthorize(value = "hasRole('USER')")
+    @GetMapping("/profile")
+    @ResponseStatus(HttpStatus.OK)
+    public RetrieveCustomerDto retrieveCustomer() {
+        return customerService.retrieveCustomer();
+    }
 
     @PreAuthorize(value = "hasRole('USER')")
     @PutMapping("/profile")

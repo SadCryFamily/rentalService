@@ -1,9 +1,11 @@
 package com.demo.app.service;
 
+import com.demo.app.dto.RetrieveCustomerDto;
 import com.demo.app.dto.UpdateCustomerDto;
 import com.demo.app.entity.Customer;
 import com.demo.app.enums.ExceptionMessage;
 import com.demo.app.exception.*;
+import com.demo.app.mapper.CustomerMapper;
 import com.demo.app.repository.CustomerRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,26 @@ public class CustomerManagementServiceImpl implements CustomerService {
 
     @Autowired
     private BCryptPasswordEncoder cryptPasswordEncoder;
+
+    @Autowired
+    private CustomerMapper customerMapper;
+
+    @Override
+    @Transactional
+    public RetrieveCustomerDto retrieveCustomer() {
+
+        Authentication authentication =
+                SecurityContextHolder.getContext().getAuthentication();
+
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+
+        String username = userDetails.getUsername();
+
+        Customer rawCustomer = customerRepository.findByCustomerUsername(username);
+
+        return customerMapper.toRetrieveCustomerDto(rawCustomer);
+
+    }
 
     @Override
     @Transactional

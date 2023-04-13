@@ -1,6 +1,7 @@
 package com.demo.app.controller;
 
 import com.demo.app.dto.CreateRentalDto;
+import com.demo.app.dto.PreviewRentalDto;
 import com.demo.app.dto.ViewRentalDto;
 import com.demo.app.service.RentalService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,10 +25,24 @@ public class RentalController {
         return rentalService.createRental(rentalDto);
     }
 
+    @GetMapping("/rentals")
+    @PreAuthorize(value = "hasRole('USER')")
+    @ResponseStatus(HttpStatus.OK)
+    public Set<PreviewRentalDto> getAllAvailableRentals() {
+        return rentalService.getAllAvailableRentals();
+    }
+
     @GetMapping("/rental")
     @PreAuthorize(value = "hasRole('USER')")
     @ResponseStatus(HttpStatus.OK)
-    public Set<ViewRentalDto> getAllCustomerRentals() {
+    public ViewRentalDto retrieveRentalById(@RequestParam("id") Long rentalId) {
+        return rentalService.retrieveRentalById(rentalId);
+    }
+
+    @GetMapping("/my")
+    @PreAuthorize(value = "hasRole('USER')")
+    @ResponseStatus(HttpStatus.OK)
+    public Set<PreviewRentalDto> getAllCustomerRentals() {
         return rentalService.getAllCustomerRentals();
     }
 
