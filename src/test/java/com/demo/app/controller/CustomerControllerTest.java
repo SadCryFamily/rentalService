@@ -25,6 +25,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 
 @SpringBootTest
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -46,7 +49,7 @@ class CustomerControllerTest {
     @Test
     @Order(1)
     @WithCustomMockUser(customerUsername = "username", customerPassword = "password")
-    public void update_existed_customer() throws Exception {
+    public void updateExistedCustomer() throws Exception {
 
         UpdateCustomerDto mockUpdateCustomerDto = UpdateCustomerDto.builder()
                 .customerFirstName("updateFirstname")
@@ -60,12 +63,12 @@ class CustomerControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsBytes(mockUpdateCustomerDto))
                         .header("Authorization", "Bearer " + jwtToken))
-                .andExpect(MockMvcResultMatchers.status().is2xxSuccessful())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.customerFirstName",
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(jsonPath("$.customerFirstName",
                         Matchers.is(mockUpdateCustomerDto.getCustomerFirstName())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.customerLastName",
+                .andExpect(jsonPath("$.customerLastName",
                         Matchers.is(mockUpdateCustomerDto.getCustomerLastName())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.customerPassword",
+                .andExpect(jsonPath("$.customerPassword",
                         Matchers.is(mockUpdateCustomerDto.getCustomerPassword())));
 
     }
@@ -73,7 +76,23 @@ class CustomerControllerTest {
     @Test
     @Order(2)
     @WithCustomMockUser(customerUsername = "username", customerPassword = "updatePassword")
-    public void delete_existed_customer() throws Exception {
+    public void retrieveExistedCustomer() throws Exception {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String jwtToken = jwtUtils.generateJwtToken(authentication);
+
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/profile")
+                .header("Authorization", "Bearer " + jwtToken))
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(jsonPath("$.customerFirstName", Matchers.is("updateFirstname")))
+                .andExpect(jsonPath("$.customerLastName", Matchers.is("updateLastname")));
+
+    }
+
+    @Test
+    @Order(3)
+    @WithCustomMockUser(customerUsername = "username", customerPassword = "updatePassword")
+    public void deleteExistedCustomer() throws Exception {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String jwtToken = jwtUtils.generateJwtToken(authentication);
@@ -81,14 +100,30 @@ class CustomerControllerTest {
         this.mockMvc.perform(MockMvcRequestBuilders.delete("/profile")
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + jwtToken))
-                .andExpect(MockMvcResultMatchers.status().is2xxSuccessful());
+                .andExpect(status().is2xxSuccessful());
 
     }
 
     @Test
-    @Order(3)
+    @Order(4)
     @WithCustomMockUser(customerUsername = "username", customerPassword = "updatePassword")
-    public void update_locked_customer() throws Exception {
+    public void retrieveDeletedAndNotActivatedCustomer() throws Exception {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String jwtToken = jwtUtils.generateJwtToken(authentication);
+
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/profile")
+                .header("Authorization", "Bearer " + jwtToken))
+                .andExpect(status().is4xxClientError())
+                .andExpect(jsonPath("$.errors[0]",
+                        Matchers.is(ExceptionMessage.RETRIEVE_NON_EXISTED_CUSTOMER.getExceptionMessage())));
+
+    }
+
+    @Test
+    @Order(5)
+    @WithCustomMockUser(customerUsername = "username", customerPassword = "updatePassword")
+    public void updateLockedCustomer() throws Exception {
 
         UpdateCustomerDto mockUpdateCustomerDto = UpdateCustomerDto.builder()
                 .customerFirstName("updateFirstname")
@@ -102,16 +137,16 @@ class CustomerControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsBytes(mockUpdateCustomerDto))
                         .header("Authorization", "Bearer " + jwtToken))
-                .andExpect(MockMvcResultMatchers.status().is4xxClientError())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.errors[0]",
+                .andExpect(status().is4xxClientError())
+                .andExpect(jsonPath("$.errors[0]",
                         Matchers.is(ExceptionMessage.LOCKED_CUSTOMER_ACCOUNT.getExceptionMessage())));
 
     }
 
-    @Order(4)
+    @Order(6)
     @Test
     @WithCustomMockUser(customerUsername = "username", customerPassword = "updatePassword")
-    public void delete_locked_customer() throws Exception {
+    public void deleteLockedCustomer() throws Exception {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String jwtToken = jwtUtils.generateJwtToken(authentication);
@@ -119,8 +154,8 @@ class CustomerControllerTest {
         this.mockMvc.perform(MockMvcRequestBuilders.delete("/profile")
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + jwtToken))
-                .andExpect(MockMvcResultMatchers.status().is4xxClientError())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.errors[0]",
+                .andExpect(status().is4xxClientError())
+                .andExpect(jsonPath("$.errors[0]",
                         Matchers.is(ExceptionMessage.LOCKED_CUSTOMER_ACCOUNT.getExceptionMessage())));
     }
 

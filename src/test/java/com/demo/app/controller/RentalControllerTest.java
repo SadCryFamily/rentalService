@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -48,7 +49,7 @@ class RentalControllerTest {
     @Test
     @WithCustomMockUser(customerUsername = "username", customerPassword = "password")
     @Order(1)
-    public void create_non_existed_rental() throws Exception {
+    public void createNonExistedRental() throws Exception {
 
         CreateRentalDto mockRentalDto = CreateRentalDto.builder()
                 .rentalName("rentalName")
@@ -75,7 +76,7 @@ class RentalControllerTest {
     @Test
     @WithCustomMockUser(customerUsername = "username", customerPassword = "password")
     @Order(2)
-    public void create_existed_rental() throws Exception {
+    public void createExistedRental() throws Exception {
 
         CreateRentalDto mockRentalDto = CreateRentalDto.builder()
                 .rentalName("rentalName")
@@ -102,12 +103,45 @@ class RentalControllerTest {
     @Test
     @WithCustomMockUser(customerUsername = "username", customerPassword = "password")
     @Order(3)
-    public void getAll_existed_customer_rentals() throws Exception {
+    public void retrieveRentalById() throws Exception {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String jwtToken = jwtUtils.generateJwtToken(authentication);
 
         this.mockMvc.perform(MockMvcRequestBuilders.get("/rental")
+                        .param("id", "1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", "Bearer " + jwtToken))
+                .andExpect(MockMvcResultMatchers.status().is2xxSuccessful())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.rentalName", Matchers.is("rentalName")))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.rentalCity", Matchers.is("rentalCity")));
+
+    }
+
+    @Test
+    @WithCustomMockUser(customerUsername = "username", customerPassword = "password")
+    @Order(4)
+    public void retrieveAllAvailableRentals() throws Exception {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String jwtToken = jwtUtils.generateJwtToken(authentication);
+
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/rentals")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", "Bearer " + jwtToken))
+                .andExpect(MockMvcResultMatchers.status().is2xxSuccessful());
+
+    }
+
+    @Test
+    @WithCustomMockUser(customerUsername = "username", customerPassword = "password")
+    @Order(5)
+    public void getAllExistedCustomerRentals() throws Exception {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String jwtToken = jwtUtils.generateJwtToken(authentication);
+
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/my")
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + jwtToken))
                 .andExpect(MockMvcResultMatchers.status().is2xxSuccessful());
@@ -116,13 +150,13 @@ class RentalControllerTest {
 
     @Test
     @WithCustomMockUser(customerUsername = "NonExistedUsername", customerPassword = "NonExistedPassword")
-    @Order(4)
-    public void getAll_non_existed_customer_rentals() throws Exception {
+    @Order(6)
+    public void getAllNonExistedCustomerRentals() throws Exception {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String jwtToken = jwtUtils.generateJwtToken(authentication);
 
-        this.mockMvc.perform(MockMvcRequestBuilders.get("/rental")
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/my")
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + jwtToken))
                 .andExpect(MockMvcResultMatchers.status().is4xxClientError())
@@ -133,8 +167,8 @@ class RentalControllerTest {
 
     @Test
     @WithCustomMockUser(customerUsername = "username", customerPassword = "password")
-    @Order(5)
-    public void delete_existed_rentalById() throws Exception {
+    @Order(7)
+    public void deleteExistedRentalById() throws Exception {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String jwtToken = jwtUtils.generateJwtToken(authentication);
@@ -149,8 +183,8 @@ class RentalControllerTest {
 
     @Test
     @WithCustomMockUser(customerUsername = "username", customerPassword = "password")
-    @Order(6)
-    public void delete_non_existed_rentalById() throws Exception {
+    @Order(8)
+    public void deleteNonExistedRentalById() throws Exception {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String jwtToken = jwtUtils.generateJwtToken(authentication);

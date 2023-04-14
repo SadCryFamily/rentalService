@@ -42,9 +42,15 @@ public class CustomerManagementServiceImpl implements CustomerService {
 
         String username = userDetails.getUsername();
 
-        Customer rawCustomer = customerRepository.findByCustomerUsername(username);
+        if (customerRepository.existsByCustomerUsernameAndIsActivatedTrueAndIsDeletedFalse(username)) {
+            Customer rawCustomer = customerRepository.findByCustomerUsername(username);
 
-        return customerMapper.toRetrieveCustomerDto(rawCustomer);
+            log.info("RETRIEVED Customer BY USERNAME: {}", username);
+            return customerMapper.toRetrieveCustomerDto(rawCustomer);
+        }
+
+        log.error("ERROR RETRIEVE Customer by USERNAME: {}", username);
+        throw new RetrieveNonExistingCustomerException(ExceptionMessage.RETRIEVE_NON_EXISTED_CUSTOMER.getExceptionMessage());
 
     }
 

@@ -1,8 +1,6 @@
 package com.demo.app.advice;
 
-import com.demo.app.exception.CreateExistingRentalException;
-import com.demo.app.exception.DeleteNonExistingRentalException;
-import com.demo.app.exception.NullRentalException;
+import com.demo.app.exception.*;
 import com.demo.app.util.ErrorsMapperUtil;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -30,7 +28,25 @@ public class RentalAdvice {
         List<String> errorsList = Collections.singletonList(e.getLocalizedMessage());
 
         return new ResponseEntity<>(ErrorsMapperUtil.getErrorsMap(errorsList),
-                new HttpHeaders(), HttpStatus.NO_CONTENT);
+                new HttpHeaders(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(RetrieveNullRentalException.class)
+    public ResponseEntity<Map<String, List<String>>> handleRetrieveNullRentalException
+            (RetrieveNullRentalException e) {
+        List<String> errorsList = Collections.singletonList(e.getMessage());
+
+        return new ResponseEntity<>(ErrorsMapperUtil.getErrorsMap(errorsList),
+                new HttpHeaders(), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(NonExistingAllRentalsException.class)
+    public ResponseEntity<Map<String, List<String>>> handleNonExistingAllRentalsException
+            (NonExistingAllRentalsException e) {
+        List<String> errorsList = Collections.singletonList(e.getMessage());
+
+        return new ResponseEntity<>(ErrorsMapperUtil.getErrorsMap(errorsList),
+                new HttpHeaders(), HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(DeleteNonExistingRentalException.class)

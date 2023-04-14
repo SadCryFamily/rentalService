@@ -19,4 +19,6 @@ public interface CustomerMapper {
     Customer toCustomer(CreateCustomerDto customerDto);
 
     Customer toCustomer(UpdateCustomerDto customerDto);
+
+    Customer toCustomer(RetrieveCustomerDto customerDto);
 }

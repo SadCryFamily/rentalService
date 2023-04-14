@@ -131,6 +131,17 @@ public class CustomerAdvice {
                 new HttpHeaders(), HttpStatus.NOT_FOUND);
     }
 
+
+    @ExceptionHandler({RetrieveNonExistingCustomerException.class})
+    public ResponseEntity<Map<String, List<String>>> handleRetrieveNonExistingCustomerException
+            (RetrieveNonExistingCustomerException e) {
+
+        List<String> errorsList = Collections.singletonList(e.getMessage());
+
+        return new ResponseEntity<>(ErrorsMapperUtil.getErrorsMap(errorsList),
+                new HttpHeaders(), HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler({AccountLockedException.class})
     public ResponseEntity<Map<String, List<String>>> handleAccountLockedException (AccountLockedException e) {
 

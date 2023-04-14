@@ -14,6 +14,10 @@ public interface RentalMapper {
 
     Rental toRental(CreateRentalDto rentalDto);
 
+    Rental toRental(ViewRentalDto rentalDto);
+
+    Rental toRental(PreviewRentalDto rentalDto);
+
     PreviewRentalDto toPreviewRentalDto(Rental rental);
 
     ViewRentalDto toViewRentalDto(Rental rental);

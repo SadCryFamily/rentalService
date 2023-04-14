@@ -2,6 +2,7 @@ package com.demo.app.service;
 
 import com.demo.app.dto.CreateRentalDto;
 import com.demo.app.dto.PreviewRentalDto;
+import com.demo.app.dto.RetrieveCustomerDto;
 import com.demo.app.dto.ViewRentalDto;
 import com.demo.app.entity.Customer;
 import com.demo.app.entity.Rental;
@@ -95,15 +96,35 @@ public class RentalServiceImpl implements RentalService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public ViewRentalDto retrieveRentalById(Long id) {
-        Rental rental = rentalRepository.findById(id).get();
 
-        return rentalMapper.toViewRentalDto(rental);
+        Optional<Rental> optionalRental = rentalRepository.findById(id);
+
+        if (optionalRental.isEmpty()) {
+            throw new NullRentalException(ExceptionMessage.RETRIEVE_NULL_RENTAL.getExceptionMessage());
+        }
+
+        ViewRentalDto viewRentalDto = rentalMapper.toViewRentalDto(optionalRental.get());
+
+        if (!rentalRepository.existsById(id)) {
+            log.error("ERROR RETRIEVE Rental By ID: {}", id);
+            throw new NullRentalException(ExceptionMessage.RETRIEVE_NULL_RENTAL.getExceptionMessage());
+        }
+
+        log.info("RETRIEVED Rental By ID: {}, NAME: {}", id, viewRentalDto.getRentalName());
+        return viewRentalDto;
+
     }
 
     @Override
     @Transactional(readOnly = true)
     public Set<PreviewRentalDto> getAllAvailableRentals() {
+
+        if (rentalRepository.findAll().size() == 0) {
+            throw new NonExistingAllRentalsException(ExceptionMessage.NO_ALL_RENTALS.getExceptionMessage());
+        }
+
         return rentalRepository.findAll()
                 .stream()
                 .map(entity -> rentalMapper.toPreviewRentalDto(entity))

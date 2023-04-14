@@ -6,8 +6,6 @@ public enum ExceptionMessage {
 
     NOT_AUTHORIZED("Cant reach resource while unauthorized"),
 
-    ALREADY_EXISTED_CUSTOMER("Customer already exists by given email or username"),
-
     NULL_DTO_ACTIVATION("Activation entity cant be null"),
 
     NULL_CUSTOMER_CREATION("Customer cant be null"),
@@ -15,6 +13,10 @@ public enum ExceptionMessage {
     NULL_CUSTOMER_UPDATE("Customer cant be null"),
 
     NULL_RENTAL_CREATION("Rental cant be null"),
+
+    NO_ALL_RENTALS("No one active rentals available"),
+
+    RETRIEVE_NULL_RENTAL("Cant retrieve non-existed rental"),
 
     RENTAL_UNIQUE_CREATION("Rental already exists by given city and address"),
 
@@ -25,6 +27,8 @@ public enum ExceptionMessage {
     NO_MY_RENTALS("Have no any rental to show"),
 
     NON_EXISTED_CUSTOMER("Cant update data for non-existed customer"),
+
+    RETRIEVE_NON_EXISTED_CUSTOMER("Cant get data for non-existed customer"),
 
     NON_EXISTED_RENTAL("Can't delete someone else's rental"),
 

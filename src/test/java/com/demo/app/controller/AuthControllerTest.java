@@ -47,7 +47,7 @@ class AuthControllerTest {
 
     @Test
     @Order(1)
-    public void register_new_customer() throws Exception {
+    public void registerNewCustomer() throws Exception {
 
         CreateCustomerDto mockCustomerDto = CreateCustomerDto.builder()
                 .customerFirstName("firstname")
@@ -70,7 +70,7 @@ class AuthControllerTest {
 
     @Test
     @Order(2)
-    public void register_existed_customer() throws Exception {
+    public void registerExistedCustomer() throws Exception {
 
         CreateCustomerDto mockCustomerDto = CreateCustomerDto.builder()
                 .customerFirstName("firstname")
@@ -94,7 +94,7 @@ class AuthControllerTest {
 
     @Test
     @Order(3)
-    public void activate_non_activated_customer() throws Exception {
+    public void activateNewCustomer() throws Exception {
 
         ActivateCustomerDto mockActivateCustomerDto = ActivateCustomerDto.builder()
                 .activationCode(new BigDecimal("222222"))
@@ -109,7 +109,7 @@ class AuthControllerTest {
 
     @Test
     @Order(4)
-    public void activate_activated_customer() throws Exception {
+    public void activateExistedCustomer() throws Exception {
 
         ActivateCustomerDto mockActivateCustomerDto = ActivateCustomerDto.builder()
                 .activationCode(new BigDecimal("222222"))
@@ -126,7 +126,7 @@ class AuthControllerTest {
 
     @Test
     @Order(5)
-    public void login_non_existed_customer() throws Exception {
+    public void loginNonExistedCustomer() throws Exception {
 
         LoginCustomerDto mockLoginCustomerDto = LoginCustomerDto.builder()
                 .customerUsername("nonExistedUsername")
@@ -141,7 +141,7 @@ class AuthControllerTest {
 
     @Test
     @Order(6)
-    public void login_existed_customer() throws Exception {
+    public void loginExistedCustomer() throws Exception {
 
         LoginCustomerDto mockLoginCustomerDto = LoginCustomerDto.builder()
                 .customerUsername("username")

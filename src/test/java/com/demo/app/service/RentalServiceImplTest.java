@@ -4,6 +4,7 @@ import com.demo.app.annotation.WithCustomMockUser;
 import com.demo.app.dto.CreateCustomerDto;
 import com.demo.app.dto.CreateRentalDto;
 import com.demo.app.dto.PreviewRentalDto;
+import com.demo.app.dto.ViewRentalDto;
 import com.demo.app.entity.Customer;
 import com.demo.app.entity.Rental;
 import com.demo.app.mapper.CustomerMapper;
@@ -22,8 +23,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.math.BigDecimal;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
@@ -99,6 +99,62 @@ public class RentalServiceImplTest {
 
     @Test
     @WithCustomMockUser
+    public void retrieveRentalById() {
+
+        ViewRentalDto expectedViewRentalDto = ViewRentalDto.builder()
+                .rentalName("retrieve_name")
+                .rentalAddress("retrieve_address")
+                .rentalDescription("retrieve_description")
+                .rentalCity("retrieve_city")
+                .rentalArea(30)
+                .rentalPrice(BigDecimal.TEN)
+                .build();
+
+        Optional<Rental> optionalRental = Optional.of(rentalMapper.toRental(expectedViewRentalDto));
+
+        when(rentalRepository.findById(anyLong())).thenReturn(optionalRental);
+
+        when(rentalRepository.existsById(anyLong())).thenReturn(true);
+
+        ViewRentalDto actualRentalDto = rentalService.retrieveRentalById(4L);
+
+        assertEquals(expectedViewRentalDto.getRentalName(), actualRentalDto.getRentalName());
+        assertEquals(expectedViewRentalDto.getRentalAddress(), actualRentalDto.getRentalAddress());
+        assertEquals(expectedViewRentalDto.getRentalDescription(), actualRentalDto.getRentalDescription());
+        assertEquals(expectedViewRentalDto.getRentalCity(), actualRentalDto.getRentalCity());
+
+    }
+
+    @Test
+    public void getAllAvailableRentals() {
+
+        PreviewRentalDto expectedPreviewRentalDto = PreviewRentalDto.builder()
+                .rentalName("preview_name")
+                .rentalCity("preview_city")
+                .rentalArea(30)
+                .rentalPrice(BigDecimal.valueOf(1000))
+                .build();
+
+        Set<PreviewRentalDto> expectedSetRental = Set.of(expectedPreviewRentalDto);
+
+        Rental rawRental = rentalMapper.toRental(expectedPreviewRentalDto);
+
+        List<Rental> mockRentals = List.of(rawRental);
+        when(rentalRepository.findAll()).thenReturn(mockRentals);
+
+        Set<PreviewRentalDto> actualSetRental = rentalService.getAllAvailableRentals();
+
+        PreviewRentalDto actualPreviewRentalDto = actualSetRental.iterator().next();
+
+        assertEquals(expectedPreviewRentalDto.getRentalName(), actualPreviewRentalDto.getRentalName());
+        assertEquals(expectedPreviewRentalDto.getRentalCity(), actualPreviewRentalDto.getRentalCity());
+        assertEquals(expectedPreviewRentalDto.getRentalArea(), actualPreviewRentalDto.getRentalArea());
+        assertEquals(expectedPreviewRentalDto.getRentalPrice(), actualPreviewRentalDto.getRentalPrice());
+
+    }
+
+    @Test
+    @WithCustomMockUser
     public void getAllCustomerRentals() {
 
         CreateRentalDto expectedDto = CreateRentalDto.builder()
@@ -117,7 +173,7 @@ public class RentalServiceImplTest {
         when(rentalRepository.getAllRentalsByIsDeletedFalse(anyLong())).thenReturn(mockRentals);
 
         Set<PreviewRentalDto> expectedSet = mockRentals.stream()
-                .map(rental -> rentalMapper.toViewRentalDto(rental))
+                .map(rental -> rentalMapper.toPreviewRentalDto(rental))
                 .collect(Collectors.toSet());
 
         Set<PreviewRentalDto> actualSet = rentalService.getAllCustomerRentals();

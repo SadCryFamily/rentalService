@@ -1,6 +1,7 @@
 package com.demo.app.service;
 
 import com.demo.app.annotation.WithCustomMockUser;
+import com.demo.app.dto.RetrieveCustomerDto;
 import com.demo.app.dto.UpdateCustomerDto;
 import com.demo.app.entity.Customer;
 import com.demo.app.mapper.CustomerMapper;
@@ -35,6 +36,33 @@ public class CustomerManagementServiceImplTest {
 
     @MockBean
     private AuthenticationManager authenticationManager;
+
+    @Test
+    @WithCustomMockUser(customerUsername = "username", customerPassword = "password")
+    public void retrieveCustomer() {
+
+        RetrieveCustomerDto expectedRetrieveCustomerDto = RetrieveCustomerDto.builder()
+                .customerFirstName("retrieve_firstname")
+                .customerLastName("retrieve_lastname")
+                .customerUsername("retrieve_username")
+                .build();
+
+        Authentication mockAuthentication = SecurityContextHolder.getContext().getAuthentication();
+
+        when(authenticationManager.authenticate(any(Authentication.class))).thenReturn(mockAuthentication);
+
+        when(customerRepository.existsByCustomerUsernameAndIsActivatedTrueAndIsDeletedFalse(anyString()))
+                .thenReturn(true);
+
+        Customer customer = customerMapper.toCustomer(expectedRetrieveCustomerDto);
+
+        when(customerRepository.findByCustomerUsername(anyString())).thenReturn(customer);
+
+        RetrieveCustomerDto actualRetrieveCustomerDto = customerService.retrieveCustomer();
+
+        assertEquals(expectedRetrieveCustomerDto.getCustomerUsername(), actualRetrieveCustomerDto.getCustomerUsername());
+
+    }
 
     @Test
     @WithCustomMockUser(customerUsername = "username", customerPassword = "password")
