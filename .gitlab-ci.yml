@@ -1,0 +1,21 @@
+image: docker/compose:latest
+
+services:
+  - docker:dind
+
+stages:
+  - build
+  - deploy
+
+build:
+  stage: build
+  script:
+    - docker-compose build $CI_PROJECT_NAME
+    - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+    - docker-compose push $CI_PROJECT_NAME
+
+deploy:
+  stage: deploy
+  script:
+    - docker-compose pull $CI_PROJECT_NAME
+    - docker-compose up -d $CI_PROJECT_NAME
