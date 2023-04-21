@@ -1,60 +1,84 @@
-# Rental Service :office:
+# RentalService
 
-Rental Service - service that allow customers to take a rent any available apartaments in their city.
+`RentalService` is a web application that allows users to browse available properties, make reservations for rentals or place offers to purchase properties.
 
-## How to run? :rotating_light:
+## Requirements
 
-**To run application locally** - download the source code using this [link](https://github.com/SadCryFamily/rentalService.git) and paste it into Get From VCS at your IDE. After code checking and building - run it manually with `main(String[] args)` method in `RentalApplication`.
+To run the application, you need to install the following programs:
 
-**To run application in Docker** - do the same according to run application locally until run the code by RentalApplication and follow next tips:
+- Java 11
+- Docker
+- Docker Compose
 
-1) Create an executable .jar file using next maven command `mvn clean package -DskipTests`.
+## Running the Application
 
-2) Open a command line and paste there a your path to root of project. For example, `cd /Desktop/renralService`.
+To run the application, follow these steps:
 
-3) Open Docker Desktop on your local machine or if its missing - download from [official site](https://desktop.docker.com/win/main/amd64/Docker%20Desktop%20Installer.exe?utm_source=docker&utm_medium=webreferral&utm_campaign=dd-smartbutton&utm_location=module).
+1. Clone the repository:
 
-4. After Docker Desktop started - in root of project directory execute next commands:
+```git
+git clone https://github.com/SadCryFamily/rentalService.git
+```
+2. Navigate to the project directory:
 
-```cmd
+```sh
+cd rentalService
+```
+
+3. Build the application:
+
+```sh
+./mvnw clean package
+```
+4. Run the application in a multiple Docker containers:
+
+```docker
 docker-compose up -d --build
 ```
 
-``docker-compose up -d --build`` - allows to containerize project data and build container.
+The application will be launched in multiple Docker containers: one container for the `Spring Boot` application and another one - for `PostgreSQL` database.
 
-#### If you wish to check manually that any of given containters started successfully using next command:
+After the application starts, it will be available at http://localhost:8080.
 
-```cmd
-docker ps
-docker logs <CONTAINER_ID> [--follow]
-```
+## Usage 
 
-``docker ps`` - required for checking all active containers in you local machine. Can be really useful when any of given containers wont be started to stop them and re-run.
+The application allows users to browse available properties, make reservations for rentals, place offers to purchase properties, and view their reservation and offer status. Users can also create and customize their own profiles and manage their orders.
 
-``docker logs <CONTAINER_ID> [--follow]`` allows to check logs as a trace or in real-time (using **-follow** key). Can provide helpful information when any of components wont be working fine.
+The project also includes user authentication and registration features. Users can register for a new account, log in with their credentials, and receive an access token to make authorized requests to the API.
 
-#### If you need to stop all active containers activated either:
+Please note that at the moment there is no moderation of orders or changes, so users can freely buy or rent properties and customize their profiles and orders without any approval process. The moderation of orders and changes will be added in the future version of the application.
 
-```cmd
-docker-compose down
-```
+## Technologies
 
-## How to use? :recycle:
+RentalService was created using the following technologies:
 
-For usage, rentalService provides a several APIs described down here:
+- Java
+- Spring Boot (Data, JPA, Security)
+- Liquibase 
+- PostgreSQL
+- Docker
+- Docker Compose
 
-``POST localhost:8080/signup`` - register a new customer.
+## Endpoints
 
-``POST localhost:8080/activate`` - active a recently registered customer.
+The application provides the following endpoints:
 
-``POST localhost:8080/signin`` - log in activated customer.
+### Auth
 
-``POST localhost:8080/rental`` - create new rental.
+- `POST /signup` - Register a new customer
+- `POST /activate` - Activate new customer
+- `POST /signin` - Authenticate a user and generate an access token (Unavailable while do not activate accout)
 
-``GET localhost:8080/rental`` - get all created customer rentals.
+### Customer
 
-``DELETE localhost:8080/rental?id=?`` - delete an customer rental by given id.
+- `POST /profile` - Retrieve a customer profile
+- `PUT /profile` - Update existing customer account data
+- `DELETE /profile` - Delete customer account
 
-``PUT localhost:8080/profile`` - update a customer profile info.
+### Rental
 
-``DELETE localhost:8080/profile`` -  block customer.
+- `POST /rental` - Create new rental
+- `GET /rentals` - Retrieve set of all available rentals
+- `GET /rental/{id}` - Retrieve specified rental by `{id}` param
+- `GET /my` - Retrieve set of all customer rentals
+- `DELETE /rental/{id}` - Delete rental by `{id}` param (Delete only customer created rentals)
