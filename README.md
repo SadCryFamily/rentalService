@@ -71,7 +71,7 @@ The application provides the following endpoints:
 
 ### Customer
 
-- `POST /profile` - Retrieve a customer profile
+- `GET /profile` - Retrieve a customer profile
 - `PUT /profile` - Update existing customer account data
 - `DELETE /profile` - Delete customer account
 
@@ -79,6 +79,6 @@ The application provides the following endpoints:
 
 - `POST /rental` - Create new rental
 - `GET /rentals` - Retrieve set of all available rentals
-- `GET /rental/{id}` - Retrieve specified rental by `{id}` param
+- `GET /rental/?id=1` - Retrieve specified rental by `1` param
 - `GET /my` - Retrieve set of all customer rentals
-- `DELETE /rental/{id}` - Delete rental by `{id}` param (Delete only customer created rentals)
+- `DELETE /rental/?id=1` - Delete rental by `1` param (Delete only customer created rentals)
