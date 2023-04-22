@@ -6,9 +6,8 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -16,6 +15,10 @@ import java.util.Set;
 public interface RentalRepository extends JpaRepository<Rental, Long> {
 
     boolean existsByRentalCityAndRentalAddress(String city, String address);
+
+    Optional<Rental> findByRentalIdAndIsDeletedFalse(Long id);
+
+    List<Rental> findAllByIsDeletedFalse();
 
     @Modifying(flushAutomatically = true)
     @Query(value = "UPDATE rental SET is_deleted = true WHERE rental_id IN (:id)", nativeQuery = true)

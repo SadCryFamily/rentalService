@@ -112,7 +112,7 @@ public class RentalServiceImplTest {
 
         Optional<Rental> optionalRental = Optional.of(rentalMapper.toRental(expectedViewRentalDto));
 
-        when(rentalRepository.findById(anyLong())).thenReturn(optionalRental);
+        when(rentalRepository.findByRentalIdAndIsDeletedFalse(anyLong())).thenReturn(optionalRental);
 
         when(rentalRepository.existsById(anyLong())).thenReturn(true);
 
@@ -140,7 +140,7 @@ public class RentalServiceImplTest {
         Rental rawRental = rentalMapper.toRental(expectedPreviewRentalDto);
 
         List<Rental> mockRentals = List.of(rawRental);
-        when(rentalRepository.findAll()).thenReturn(mockRentals);
+        when(rentalRepository.findAllByIsDeletedFalse()).thenReturn(mockRentals);
 
         Set<PreviewRentalDto> actualSetRental = rentalService.getAllAvailableRentals();
 

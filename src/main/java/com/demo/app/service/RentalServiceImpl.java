@@ -99,7 +99,7 @@ public class RentalServiceImpl implements RentalService {
     @Transactional(readOnly = true)
     public ViewRentalDto retrieveRentalById(Long id) {
 
-        Optional<Rental> optionalRental = rentalRepository.findById(id);
+        Optional<Rental> optionalRental = rentalRepository.findByRentalIdAndIsDeletedFalse(id);
 
         if (optionalRental.isEmpty()) {
             throw new NullRentalException(ExceptionMessage.RETRIEVE_NULL_RENTAL.getExceptionMessage());
@@ -121,11 +121,11 @@ public class RentalServiceImpl implements RentalService {
     @Transactional(readOnly = true)
     public Set<PreviewRentalDto> getAllAvailableRentals() {
 
-        if (rentalRepository.findAll().size() == 0) {
+        if (rentalRepository.findAllByIsDeletedFalse().size() == 0) {
             throw new NonExistingAllRentalsException(ExceptionMessage.NO_ALL_RENTALS.getExceptionMessage());
         }
 
-        return rentalRepository.findAll()
+        return rentalRepository.findAllByIsDeletedFalse()
                 .stream()
                 .map(entity -> rentalMapper.toPreviewRentalDto(entity))
                 .collect(Collectors.toSet());
