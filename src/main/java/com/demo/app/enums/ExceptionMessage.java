@@ -18,6 +18,8 @@ public enum ExceptionMessage {
 
     RETRIEVE_NULL_RENTAL("Cant retrieve non-existed rental"),
 
+    NOT_CUSTOMER_RENTAL("Cant delete someone's rental"),
+
     RENTAL_UNIQUE_CREATION("Rental already exists by given city and address"),
 
     ERROR_MAIL_MESSAGE("Cant sent message to invalid addressee or mail attachment is corrupted"),
