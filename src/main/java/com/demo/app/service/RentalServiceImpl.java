@@ -1,9 +1,6 @@
 package com.demo.app.service;
 
-import com.demo.app.dto.CreateRentalDto;
-import com.demo.app.dto.PreviewRentalDto;
-import com.demo.app.dto.RetrieveCustomerDto;
-import com.demo.app.dto.ViewRentalDto;
+import com.demo.app.dto.*;
 import com.demo.app.entity.Customer;
 import com.demo.app.entity.Rental;
 import com.demo.app.enums.ExceptionMessage;
@@ -17,7 +14,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.Optional;
 import java.util.Set;
@@ -38,7 +37,7 @@ public class RentalServiceImpl implements RentalService {
 
     @Override
     @Transactional
-    public CreateRentalDto createRental(CreateRentalDto rentalDto) {
+    public CreateRentalDto createRental(CreateRentalDto rentalDto, MultipartFile photo) throws IOException {
 
         Optional<CreateRentalDto> optionalRentalDto = Optional.ofNullable(rentalDto);
 
@@ -61,6 +60,7 @@ public class RentalServiceImpl implements RentalService {
             if (userDetails.isAccountNonLocked()) {
 
                 Rental rental = rentalMapper.toRental(checkedRentalDto);
+                rental.setRentalPhoto(photo.getBytes());
 
                 rentalRepository.save(rental);
 
@@ -92,6 +92,40 @@ public class RentalServiceImpl implements RentalService {
                 checkedRentalDto.getRentalCity(), checkedRentalDto.getRentalAddress(), new Date());
 
         throw new CreateExistingRentalException(ExceptionMessage.RENTAL_UNIQUE_CREATION.getExceptionMessage());
+
+    }
+
+    @Override
+    public UpdateRentalDto updateRentalById(Long rentalId, UpdateRentalDto rentalDto, MultipartFile photo) throws IOException {
+
+        Optional<Rental> optionalRental = rentalRepository.findByRentalIdAndIsDeletedFalse(rentalId);
+
+        if (optionalRental.isEmpty()) {
+            throw new NullRentalException(ExceptionMessage.NULL_RENTAL_CREATION.getExceptionMessage());
+        }
+
+        Authentication authentication =
+                SecurityContextHolder.getContext().getAuthentication();
+
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+
+        String username = userDetails.getUsername();
+        Long customerId = userDetails.getCustomerId();
+
+        if (rentalRepository.existsByCustomerIdAndRentalId(customerId, rentalId).isEmpty()) {
+            throw new NotCustomerRentalException(ExceptionMessage.NOT_CUSTOMER_RENTAL.getExceptionMessage());
+        }
+
+        Rental checkedRental = optionalRental.get();
+
+        checkedRental.setRentalPhoto(photo.getBytes());
+        checkedRental.setRentalName(rentalDto.getRentalName());
+        checkedRental.setRentalDescription(rentalDto.getRentalDescription());
+        checkedRental.setRentalPrice(rentalDto.getRentalPrice());
+
+        rentalRepository.save(checkedRental);
+
+        return rentalDto;
 
     }
 

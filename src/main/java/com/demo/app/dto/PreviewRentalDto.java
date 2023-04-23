@@ -17,6 +17,9 @@ import java.math.BigDecimal;
 @Builder
 public class PreviewRentalDto {
 
+    @NotNull(message = "Photo cant be null")
+    private byte[] rentalPhoto;
+
     @NotNull(message = "Name cant be null")
     @Size(min = 4, message = "Name must be longer than 4")
     private String rentalName;

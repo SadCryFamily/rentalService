@@ -64,6 +64,10 @@
                 <constraints primaryKeyName="pk_rental_id" primaryKey="true"/>
             </column>
 
+            <column name="rental_photo" type="bytea">
+                <constraints nullable="false"/>
+            </column>
+
             <column name="rental_name" type="varchar(100)">
                 <constraints nullable="false"/>
             </column>

@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
@@ -16,6 +17,9 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @Builder
 public class ViewRentalDto {
+
+    @NotNull(message = "Photo cant be null")
+    private byte[] rentalPhoto;
 
     @NotNull(message = "Name cant be null")
     @Size(min = 4, message = "Name must be longer than 4")
