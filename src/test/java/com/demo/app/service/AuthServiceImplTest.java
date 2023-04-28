@@ -12,6 +12,8 @@ import com.demo.app.dto.LoginCustomerDto;
 import org.junit.jupiter.api.Test;
 import com.demo.app.repository.CustomerRepository;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
+import org.mockito.stubbing.Answer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -41,6 +43,9 @@ class AuthServiceImplTest {
 
     @MockBean
     private CustomerRepository customerRepository;
+
+    @MockBean
+    private ActivationService activationService;
 
     @MockBean
     private RoleRepository roleRepository;
@@ -103,6 +108,9 @@ class AuthServiceImplTest {
 
         when(roleRepository.findByRoleName(any(CustomerRoles.class))).thenReturn(mockRole);
 
+        Mockito.doNothing().when(activationService).saveActivationCode(anyString(), any(BigDecimal.class));
+        Mockito.verify(activationService, Mockito.never()).saveActivationCode(anyString(), any(BigDecimal.class));
+
         BigDecimal mockActivationCode = new BigDecimal("444333");
 
         when(emailService.sendActivationEmail(anyString())).thenReturn(mockActivationCode);
@@ -118,15 +126,18 @@ class AuthServiceImplTest {
     @Test
     public void activateCustomerAccount() {
 
+        BigDecimal testableCode = new BigDecimal("444555");
+
         ActivateCustomerDto customerDto = ActivateCustomerDto.builder()
                 .username("username")
-                .activationCode(new BigDecimal("444555"))
+                .activationCode(testableCode)
                 .build();
 
-        when(customerRepository
-                .existsByCustomerUsernameAndIsActivatedFalseAndActivationCodeEquals(anyString(), any(BigDecimal.class))
-        )
-                .thenReturn(true);
+        when(customerRepository.existsByCustomerUsernameAndIsActivatedFalse(anyString())).thenReturn(true);
+
+        when(activationService.isActivationCodeValid(anyString())).thenReturn(true);
+
+        when(activationService.retrieveActivationCode(anyString())).thenReturn(testableCode);
 
         boolean expectedResponse = true;
         boolean actualResponse = authService.activateCustomerAccount(customerDto);

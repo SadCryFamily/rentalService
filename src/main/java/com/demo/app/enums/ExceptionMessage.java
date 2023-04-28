@@ -38,9 +38,13 @@ public enum ExceptionMessage {
 
     ALREADY_DELETED_CUSTOMER("Given customer already deleted"),
 
-    LOCKED_CUSTOMER_ACCOUNT("Given account is locked. Create new or try to login again"),
+    LOCKED_CUSTOMER_ACCOUNT("Your account has been locked. Please contact customer support for further assistance."),
 
-    WRONG_ACTIVATION_DATA("Activation failed. Wrong username or activation code");
+    WRONG_ACTIVATION_DATA("Activation failed. Check activation code or given customer already activated"),
+
+    WRONG_ACTIVATION_CODE("Invalid activation code. Please make sure you have entered the correct activation code and try again."),
+
+    EXPIRED_ACTIVATION_CODE("The activation code has expired. Please request a new activation code to activate your account");
 
     private String exceptionMessage;
 

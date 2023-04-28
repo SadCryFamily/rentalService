@@ -31,7 +31,6 @@ public class WithCustomMockUserSecurityContextFactory
                 true,
                 false,
                 Collections.emptySet(),
-                new BigDecimal("233353"),
                 Set.of(new SimpleGrantedAuthority("ROLE_USER"))
         );
 

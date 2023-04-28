@@ -1,6 +1,5 @@
 package com.demo.app.entity;
 
-import lombok.Builder;
 import lombok.Data;
 import org.hibernate.annotations.Type;
 import org.springframework.data.annotation.CreatedDate;
