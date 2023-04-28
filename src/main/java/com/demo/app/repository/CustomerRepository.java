@@ -18,8 +18,8 @@ public interface CustomerRepository extends JpaRepository<Customer, Long>, Custo
 
     Customer findByCustomerUsername(String username);
 
-    boolean existsByCustomerUsernameAndIsActivatedFalseAndActivationCodeEquals(String username,
-                                                                               BigDecimal code);
+    boolean existsByCustomerUsernameAndIsActivatedFalse(String username);
+
 
     boolean existsByCustomerUsernameAndIsActivatedTrueAndIsDeletedFalse(String username);
 

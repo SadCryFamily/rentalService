@@ -53,9 +53,6 @@ public class Customer {
             inverseJoinColumns = @JoinColumn(name = "rental_id"))
     private Set<Rental> rentals = new HashSet<>();
 
-    @Column(name = "activation_code")
-    private BigDecimal activationCode;
-
     @Column(name = "is_activated", columnDefinition = "bool default false")
     private boolean isActivated;
 

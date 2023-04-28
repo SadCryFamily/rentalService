@@ -151,4 +151,24 @@ public class CustomerAdvice {
                 new HttpHeaders(), HttpStatus.LOCKED);
     }
 
+    @ExceptionHandler({ExpiredActivationCodeException.class})
+    public ResponseEntity<Map<String, List<String>>> handleExpiredActivationCodeException
+            (ExpiredActivationCodeException e) {
+
+        List<String> errorsList = Collections.singletonList(e.getMessage());
+
+        return new ResponseEntity<>(ErrorsMapperUtil.getErrorsMap(errorsList),
+                new HttpHeaders(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler({WrongActivationCodeException.class})
+    public ResponseEntity<Map<String, List<String>>> handleWrongActivationCodeException
+            (WrongActivationCodeException e) {
+
+        List<String> errorsList = Collections.singletonList(e.getMessage());
+
+        return new ResponseEntity<>(ErrorsMapperUtil.getErrorsMap(errorsList),
+                new HttpHeaders(), HttpStatus.BAD_REQUEST);
+    }
+
 }

@@ -34,8 +34,6 @@ public class UserDetailsImpl implements UserDetails {
 
     private Set<Rental> rentals;
 
-    private BigDecimal activationCode;
-
     private Collection<? extends GrantedAuthority> authorities;
 
 
@@ -43,7 +41,7 @@ public class UserDetailsImpl implements UserDetails {
                            String customerLastName, String customerUsername,
                            String customerEmail, String customerPassword,
                            boolean isActivated, boolean isDeleted, Set<Rental> rentals,
-                           BigDecimal activationCode, Collection<? extends GrantedAuthority> authorities) {
+                           Collection<? extends GrantedAuthority> authorities) {
 
         this.customerId = customerId;
         this.customerFirstName = customerFirstName;
@@ -54,7 +52,6 @@ public class UserDetailsImpl implements UserDetails {
         this.isActivated = isActivated;
         this.isDeleted = isDeleted;
         this.rentals = rentals;
-        this.activationCode = activationCode;
         this.authorities = authorities;
     }
 
@@ -73,7 +70,6 @@ public class UserDetailsImpl implements UserDetails {
                 customer.isActivated(),
                 customer.isDeleted(),
                 customer.getRentals(),
-                customer.getActivationCode(),
                 authorities);
     }
 
