@@ -6,10 +6,7 @@ import com.demo.app.dto.UpdateCustomerDto;
 import com.demo.app.enums.ExceptionMessage;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hamcrest.Matchers;
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -46,6 +43,14 @@ class CustomerControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
+    private String jwtToken;
+
+    @BeforeEach
+    public void provideJwtToken() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        jwtToken = jwtUtils.generateJwtToken(authentication);
+    }
+
     @Test
     @Order(1)
     @WithCustomMockUser(customerUsername = "username", customerPassword = "password")
@@ -55,9 +60,6 @@ class CustomerControllerTest {
                 .customerFirstName("updateFirstname")
                 .customerLastName("updateLastname")
                 .customerPassword("updatePassword").build();
-
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String jwtToken = jwtUtils.generateJwtToken(authentication);
 
         this.mockMvc.perform(MockMvcRequestBuilders.put("/profile")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -78,9 +80,6 @@ class CustomerControllerTest {
     @WithCustomMockUser(customerUsername = "username", customerPassword = "updatePassword")
     public void retrieveExistedCustomer() throws Exception {
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String jwtToken = jwtUtils.generateJwtToken(authentication);
-
         this.mockMvc.perform(MockMvcRequestBuilders.get("/profile")
                 .header("Authorization", "Bearer " + jwtToken))
                 .andExpect(status().is2xxSuccessful())
@@ -94,9 +93,6 @@ class CustomerControllerTest {
     @WithCustomMockUser(customerUsername = "username", customerPassword = "updatePassword")
     public void deleteExistedCustomer() throws Exception {
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String jwtToken = jwtUtils.generateJwtToken(authentication);
-
         this.mockMvc.perform(MockMvcRequestBuilders.delete("/profile")
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + jwtToken))
@@ -108,9 +104,6 @@ class CustomerControllerTest {
     @Order(4)
     @WithCustomMockUser(customerUsername = "username", customerPassword = "updatePassword")
     public void retrieveDeletedAndNotActivatedCustomer() throws Exception {
-
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String jwtToken = jwtUtils.generateJwtToken(authentication);
 
         this.mockMvc.perform(MockMvcRequestBuilders.get("/profile")
                 .header("Authorization", "Bearer " + jwtToken))
@@ -130,9 +123,6 @@ class CustomerControllerTest {
                 .customerLastName("updateLastname")
                 .customerPassword("updatePassword").build();
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String jwtToken = jwtUtils.generateJwtToken(authentication);
-
         this.mockMvc.perform(MockMvcRequestBuilders.put("/profile")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsBytes(mockUpdateCustomerDto))
@@ -147,9 +137,6 @@ class CustomerControllerTest {
     @Test
     @WithCustomMockUser(customerUsername = "username", customerPassword = "updatePassword")
     public void deleteLockedCustomer() throws Exception {
-
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String jwtToken = jwtUtils.generateJwtToken(authentication);
 
         this.mockMvc.perform(MockMvcRequestBuilders.delete("/profile")
                         .contentType(MediaType.APPLICATION_JSON)

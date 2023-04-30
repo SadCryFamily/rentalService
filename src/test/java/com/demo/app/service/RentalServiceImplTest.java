@@ -1,29 +1,35 @@
 package com.demo.app.service;
 
 import com.demo.app.annotation.WithCustomMockUser;
-import com.demo.app.dto.CreateCustomerDto;
-import com.demo.app.dto.CreateRentalDto;
-import com.demo.app.dto.PreviewRentalDto;
-import com.demo.app.dto.ViewRentalDto;
+import com.demo.app.dto.*;
 import com.demo.app.entity.Customer;
 import com.demo.app.entity.Rental;
 import com.demo.app.mapper.CustomerMapper;
 import com.demo.app.mapper.RentalMapper;
 import com.demo.app.repository.CustomerRepository;
 import com.demo.app.repository.RentalRepository;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.util.ResourceUtils;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.*;
+import java.nio.file.Files;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
@@ -54,6 +60,17 @@ public class RentalServiceImplTest {
     @MockBean
     private AuthenticationManager authenticationManager;
 
+    private MockMultipartFile createMockFile() throws IOException {
+        ClassPathResource classPathResource = new ClassPathResource("images/company_logo.png");
+
+        File file = classPathResource.getFile();
+
+        return new MockMultipartFile("photo",
+                "company_logo.png",
+                "image/png",
+                Files.readAllBytes(file.toPath()));
+    }
+
     @BeforeEach
     public void setUp() {
         mockAuthentication = SecurityContextHolder.getContext().getAuthentication();
@@ -62,7 +79,7 @@ public class RentalServiceImplTest {
 
     @Test
     @WithCustomMockUser
-    public void createRental() {
+    public void createRental() throws IOException {
 
         when(rentalRepository.existsByRentalCityAndRentalAddress(anyString(), anyString()))
                 .thenReturn(false);
@@ -87,13 +104,40 @@ public class RentalServiceImplTest {
                 .rentalDescription("description")
                 .build();
 
-        CreateRentalDto actualDto = rentalService.createRental(expectedDto);
+        CreateRentalDto actualDto = rentalService.createRental(expectedDto, createMockFile());
 
         assertEquals(expectedDto.getRentalName(), actualDto.getRentalName());
         assertEquals(expectedDto.getRentalAddress(), actualDto.getRentalAddress());
         assertEquals(expectedDto.getRentalCity(), actualDto.getRentalCity());
         assertEquals(expectedDto.getRentalArea(), actualDto.getRentalArea());
         assertEquals(expectedDto.getRentalDescription(), actualDto.getRentalDescription());
+
+    }
+
+    @Test
+    @WithCustomMockUser
+    public void updateRentalById() throws IOException {
+
+        UpdateRentalDto expectedRentalDto = UpdateRentalDto.builder()
+                .rentalName("rentalName")
+                .rentalDescription("rentalDescription")
+                .rentalPrice(BigDecimal.valueOf(5544)).build();
+
+        Rental rawRental = rentalMapper.toRental(expectedRentalDto);
+
+        when(rentalRepository.findByRentalIdAndIsDeletedFalse(anyLong())).thenReturn(Optional.of(rawRental));
+
+        when(rentalRepository.findByCustomerIdAndRentalId(anyLong(), anyLong()))
+                .thenReturn(Optional.of(rawRental));
+
+        when(rentalRepository.save(any(Rental.class))).thenReturn(rawRental);
+
+        UpdateRentalDto actualRentalDto = rentalService
+                .updateRentalById(1L, expectedRentalDto, createMockFile());
+
+        assertEquals(expectedRentalDto.getRentalName(), actualRentalDto.getRentalName());
+        assertEquals(expectedRentalDto.getRentalDescription(), actualRentalDto.getRentalDescription());
+        assertEquals(expectedRentalDto.getRentalPrice(), actualRentalDto.getRentalPrice());
 
     }
 
@@ -199,7 +243,7 @@ public class RentalServiceImplTest {
 
         when(rentalRepository.findById(anyLong())).thenReturn(Optional.of(mockRental));
 
-        when(rentalRepository.existsByCustomerIdAndRentalId(anyLong(), anyLong()))
+        when(rentalRepository.findByCustomerIdAndRentalId(anyLong(), anyLong()))
                 .thenReturn(Optional.of(mockRental));
 
         when(customerRepository.existsByCustomerUsernameAndIsActivatedTrueAndIsDeletedFalse(anyString()))

@@ -39,10 +39,6 @@
                 <constraints nullable="false"/>
             </column>
 
-            <column name="activation_code" type="numeric">
-                <constraints nullable="false"/>
-            </column>
-
             <column name="created_at" type="timestamp">
                 <constraints nullable="false"/>
             </column>
@@ -62,6 +58,10 @@
         <createTable tableName="rental">
             <column name="rental_id" type="bigserial">
                 <constraints primaryKeyName="pk_rental_id" primaryKey="true"/>
+            </column>
+
+            <column name="rental_photo" type="bytea">
+                <constraints nullable="false"/>
             </column>
 
             <column name="rental_name" type="varchar(100)">

@@ -8,6 +8,7 @@ import com.demo.app.auth.repository.RoleRepository;
 import com.demo.app.dto.ActivateCustomerDto;
 import com.demo.app.dto.CreateCustomerDto;
 import com.demo.app.dto.LoginCustomerDto;
+import com.demo.app.dto.ResendActivationDto;
 import com.demo.app.entity.Customer;
 import com.demo.app.enums.ExceptionMessage;
 import com.demo.app.exception.*;
@@ -53,6 +54,9 @@ public class AuthServiceImpl implements AuthService {
     private JwtUtils jwtUtils;
 
     @Autowired
+    private ActivationService activationService;
+
+    @Autowired
     private AuthenticationManager authenticationManager;
 
     @Override
@@ -81,9 +85,10 @@ public class AuthServiceImpl implements AuthService {
 
             BigDecimal activationCode =
                     emailService.sendActivationEmail(customer.getCustomerEmail());
-            customer.setActivationCode(activationCode);
 
-            Customer logCustomer = customerRepository.save(customer);
+            activationService.saveActivationCode(username, activationCode);
+
+            customerRepository.save(customer);
 
             log.info("CREATED Customer by USERNAME: {}, AT TIME: {}",
                     username, new Date());
@@ -94,7 +99,7 @@ public class AuthServiceImpl implements AuthService {
 
             log.error("ERROR CREATING Customer by USERNAME : {}, AT TIME: {}", username, new Date());
 
-            throw new CreateExistingCustomerException(ExceptionMessage.ALREADY_DELETED_CUSTOMER.getExceptionMessage());
+            throw new CreateExistingCustomerException(ExceptionMessage.ALREADY_EXIST_CUSTOMER.getExceptionMessage());
         }
 
     }
@@ -124,35 +129,53 @@ public class AuthServiceImpl implements AuthService {
     @Transactional
     public boolean activateCustomerAccount(ActivateCustomerDto customerDto) {
 
-        Optional<ActivateCustomerDto> optionalCustomerDto = Optional.ofNullable(customerDto);
-
-        if (optionalCustomerDto.isEmpty()) {
-            throw new NullActivateCustomerException(
-                    ExceptionMessage.NULL_DTO_ACTIVATION.getExceptionMessage()
-            );
+        if (customerDto == null) {
+            throw new NullActivateCustomerException(ExceptionMessage.NULL_DTO_ACTIVATION.getExceptionMessage());
         }
 
-        String customerUsername = optionalCustomerDto.get().getUsername();
-        BigDecimal code = optionalCustomerDto.get().getActivationCode();
+        String customerUsername = customerDto.getUsername();
+        BigDecimal requestActivationCode = customerDto.getActivationCode();
 
-        boolean isNonActivatedWithTrueCodeExists =
-                customerRepository.existsByCustomerUsernameAndIsActivatedFalseAndActivationCodeEquals(customerUsername, code);
-
-        if (isNonActivatedWithTrueCodeExists) {
-            customerRepository.updateIsCustomerActivatedByUsername(customerUsername);
-
-            log.info("ACTIVATED Customer by USERNAME: {}, AT TIME {}", customerUsername, new Date());
-
-            return true;
-
-        } else {
-
+        if (!customerRepository.existsByCustomerUsernameAndIsActivatedFalse(customerUsername)) {
             log.error("ERROR ACTIVATE Customer BY USERNAME: {}, AT TIME: {}", customerUsername, new Date());
-
-            throw new WrongUsernameOrCodeException(
-                    ExceptionMessage.WRONG_ACTIVATION_DATA.getExceptionMessage()
-            );
-
+            throw new WrongUsernameOrCodeException(ExceptionMessage.WRONG_ACTIVATION_DATA.getExceptionMessage());
         }
+
+        if (!activationService.isActivationCodeValid(customerUsername)) {
+            log.error("ERROR ACTIVATE Customer BY USERNAME: {}, AT TIME: {}", customerUsername, new Date());
+            throw new ExpiredActivationCodeException(ExceptionMessage.EXPIRED_ACTIVATION_CODE.getExceptionMessage());
+        }
+
+        BigDecimal trueActivationCode = activationService.retrieveActivationCode(customerUsername);
+
+        if (!trueActivationCode.equals(requestActivationCode)) {
+            log.error("ERROR ACTIVATE Customer BY USERNAME: {}, AT TIME: {}", customerUsername, new Date());
+            throw new WrongActivationCodeException(ExceptionMessage.WRONG_ACTIVATION_CODE.getExceptionMessage());
+        }
+
+        log.info("ACTIVATED Customer by USERNAME: {}, AT TIME {}", customerUsername, new Date());
+        customerRepository.updateIsCustomerActivatedByUsername(customerUsername);
+
+        return true;
+    }
+
+    @Override
+    @Transactional
+    public boolean restoreActivationCode(ResendActivationDto activationDto)
+            throws MessagingException, FileNotFoundException {
+
+        String activationEmail = activationDto.getCustomerEmail();
+
+        if (!customerRepository.existsByCustomerEmailAndIsActivatedFalse(activationEmail)) {
+            throw new CustomerAlreadyActivatedException(ExceptionMessage.ALREADY_ACTIVATED_CUSTOMER.getExceptionMessage());
+        }
+
+        BigDecimal activationCode = emailService.sendActivationEmail(activationEmail);
+        Customer customer = customerRepository.findByCustomerEmail(activationEmail);
+
+        activationService.saveActivationCode(customer.getCustomerUsername(), activationCode);
+
+        return true;
+
     }
 }

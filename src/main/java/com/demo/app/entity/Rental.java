@@ -1,7 +1,7 @@
 package com.demo.app.entity;
 
-import lombok.Builder;
 import lombok.Data;
+import org.hibernate.annotations.Type;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -22,6 +22,11 @@ public class Rental {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "rental_id")
     private Long rentalId;
+
+    @Lob
+    @Type(type = "org.hibernate.type.ImageType")
+    @Column(name = "rental_photo")
+    private byte[] rentalPhoto;
 
     @Column(name = "rental_name")
     private String rentalName;

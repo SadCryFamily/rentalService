@@ -4,6 +4,7 @@ import com.demo.app.auth.pojo.JwtResponse;
 import com.demo.app.dto.ActivateCustomerDto;
 import com.demo.app.dto.CreateCustomerDto;
 import com.demo.app.dto.LoginCustomerDto;
+import com.demo.app.dto.ResendActivationDto;
 
 import javax.mail.MessagingException;
 import java.io.FileNotFoundException;
@@ -15,5 +16,7 @@ public interface AuthService {
     JwtResponse loginCustomer(LoginCustomerDto customerDto);
 
     boolean activateCustomerAccount(ActivateCustomerDto customerDto);
+
+    boolean restoreActivationCode(ResendActivationDto activationDto) throws MessagingException, FileNotFoundException;
 
 }
