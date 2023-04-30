@@ -171,4 +171,14 @@ public class CustomerAdvice {
                 new HttpHeaders(), HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler({CustomerAlreadyActivatedException.class})
+    public ResponseEntity<Map<String, List<String>>> handleCustomerAlreadyActivatedException
+            (CustomerAlreadyActivatedException e) {
+
+        List<String> errorsList = Collections.singletonList(e.getMessage());
+
+        return new ResponseEntity<>(ErrorsMapperUtil.getErrorsMap(errorsList),
+                new HttpHeaders(), HttpStatus.BAD_REQUEST);
+    }
+
 }

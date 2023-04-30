@@ -8,6 +8,7 @@ import com.demo.app.auth.repository.RoleRepository;
 import com.demo.app.dto.ActivateCustomerDto;
 import com.demo.app.dto.CreateCustomerDto;
 import com.demo.app.dto.LoginCustomerDto;
+import com.demo.app.dto.ResendActivationDto;
 import com.demo.app.entity.Customer;
 import com.demo.app.enums.ExceptionMessage;
 import com.demo.app.exception.*;
@@ -98,7 +99,7 @@ public class AuthServiceImpl implements AuthService {
 
             log.error("ERROR CREATING Customer by USERNAME : {}, AT TIME: {}", username, new Date());
 
-            throw new CreateExistingCustomerException(ExceptionMessage.ALREADY_DELETED_CUSTOMER.getExceptionMessage());
+            throw new CreateExistingCustomerException(ExceptionMessage.ALREADY_EXIST_CUSTOMER.getExceptionMessage());
         }
 
     }
@@ -158,4 +159,23 @@ public class AuthServiceImpl implements AuthService {
         return true;
     }
 
+    @Override
+    @Transactional
+    public boolean restoreActivationCode(ResendActivationDto activationDto)
+            throws MessagingException, FileNotFoundException {
+
+        String activationEmail = activationDto.getCustomerEmail();
+
+        if (!customerRepository.existsByCustomerEmailAndIsActivatedFalse(activationEmail)) {
+            throw new CustomerAlreadyActivatedException(ExceptionMessage.ALREADY_ACTIVATED_CUSTOMER.getExceptionMessage());
+        }
+
+        BigDecimal activationCode = emailService.sendActivationEmail(activationEmail);
+        Customer customer = customerRepository.findByCustomerEmail(activationEmail);
+
+        activationService.saveActivationCode(customer.getCustomerUsername(), activationCode);
+
+        return true;
+
+    }
 }

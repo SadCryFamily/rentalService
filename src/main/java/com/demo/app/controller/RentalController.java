@@ -25,7 +25,7 @@ public class RentalController {
     @Autowired
     private RentalRepository rentalRepository;
 
-    @PostMapping(value = "/rental", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/rental")
     @PreAuthorize(value = "hasRole('USER')")
     @ResponseStatus(HttpStatus.CREATED)
     public CreateRentalDto createRental(@RequestPart ("photo") MultipartFile photo,
@@ -33,7 +33,7 @@ public class RentalController {
         return rentalService.createRental(rentalDto, photo);
     }
 
-    @PutMapping(value = "/rental", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PutMapping(value = "/rental")
     @PreAuthorize(value = "hasRole('USER')")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public UpdateRentalDto updateRentalById(@RequestParam ("id") Long rentalId,

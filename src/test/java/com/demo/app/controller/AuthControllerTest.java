@@ -4,6 +4,7 @@ import com.demo.app.dto.ActivateCustomerDto;
 import com.demo.app.dto.CreateCustomerDto;
 import com.demo.app.dto.LoginCustomerDto;
 import com.demo.app.enums.ExceptionMessage;
+import com.demo.app.service.ActivationService;
 import com.demo.app.service.EmailService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hamcrest.Matchers;
@@ -20,6 +21,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -27,6 +29,9 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.math.BigDecimal;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 
 @SpringBootTest
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -41,6 +46,9 @@ class AuthControllerTest {
 
     @Autowired
     private ObjectMapper objectMapper;
+
+    @Autowired
+    private ActivationService activationService;
 
     @Autowired
     private MockMvc mockMvc;
@@ -89,7 +97,7 @@ class AuthControllerTest {
                         .content(objectMapper.writeValueAsString(mockCustomerDto)))
                 .andExpect(MockMvcResultMatchers.status().is2xxSuccessful())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.errors[0]",
-                        Matchers.is(ExceptionMessage.ALREADY_DELETED_CUSTOMER.getExceptionMessage())));
+                        Matchers.is(ExceptionMessage.ALREADY_EXIST_CUSTOMER.getExceptionMessage())));
     }
 
     @Test

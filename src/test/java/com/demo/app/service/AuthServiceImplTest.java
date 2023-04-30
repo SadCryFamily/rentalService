@@ -9,6 +9,9 @@ import com.demo.app.auth.repository.RoleRepository;
 import com.demo.app.dto.ActivateCustomerDto;
 import com.demo.app.dto.CreateCustomerDto;
 import com.demo.app.dto.LoginCustomerDto;
+import com.demo.app.dto.ResendActivationDto;
+import com.demo.app.entity.Customer;
+import com.demo.app.mapper.CustomerMapper;
 import org.junit.jupiter.api.Test;
 import com.demo.app.repository.CustomerRepository;
 import org.junit.runner.RunWith;
@@ -55,6 +58,9 @@ class AuthServiceImplTest {
 
     @MockBean
     private JwtUtils jwtUtils;
+
+    @Autowired
+    private CustomerMapper customerMapper;
 
     @Test
     @WithCustomMockUser(customerUsername = "username", customerPassword = "password")
@@ -146,4 +152,34 @@ class AuthServiceImplTest {
 
     }
 
+    @Test
+    public void restoreActivationCode() throws MessagingException, FileNotFoundException {
+
+        when(customerRepository.existsByCustomerEmailAndIsActivatedFalse(anyString()))
+                .thenReturn(true);
+
+        BigDecimal testableCode = new BigDecimal("123456");
+        when(emailService.sendActivationEmail(anyString())).thenReturn(testableCode);
+
+        CreateCustomerDto customerDto = CreateCustomerDto.builder()
+                .customerFirstName("Testable")
+                .customerLastName("Testable")
+                .customerUsername("originskull")
+                .customerEmail("testable@gmail.com")
+                .customerPassword("444555").build();
+
+        Customer testableCustomer = customerMapper.toCustomer(customerDto);
+        when(customerRepository.findByCustomerEmail(anyString())).thenReturn(testableCustomer);
+
+        Mockito.doNothing().when(activationService).saveActivationCode(anyString(), any(BigDecimal.class));
+
+        ResendActivationDto resendActivationDto = ResendActivationDto.builder()
+                .customerEmail("testable@gmail.com")
+                .build();
+
+        boolean expectedResponse = true;
+        boolean actualResponse = authService.restoreActivationCode(resendActivationDto);
+
+        assertEquals(expectedResponse, actualResponse);
+    }
 }

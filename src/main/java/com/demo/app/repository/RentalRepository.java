@@ -28,7 +28,7 @@ public interface RentalRepository extends JpaRepository<Rental, Long> {
             "INNER JOIN customer AS c ON c.customer_id = cr.customer_id " +
             "INNER JOIN rental AS r ON r.rental_id = cr.rental_id " +
             "WHERE cr.customer_id IN (:cid) AND r.rental_id IN (:rid)", nativeQuery = true)
-    Optional<Rental> existsByCustomerIdAndRentalId(@Param("cid") Long cid, @Param("rid") Long rid);
+    Optional<Rental> findByCustomerIdAndRentalId(@Param("cid") Long cid, @Param("rid") Long rid);
 
     @Query(value = "SELECT r.rental_id, r.rental_photo, r.rental_name, r.rental_city, r.rental_address,r.rental_description, r.rental_area, r.rental_price, r.rental_created_at, r.rental_updated_at, r.is_deleted " +
             "FROM rental AS r " +

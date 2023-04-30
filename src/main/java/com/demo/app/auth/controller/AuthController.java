@@ -1,6 +1,7 @@
 package com.demo.app.auth.controller;
 
 import com.demo.app.auth.pojo.JwtResponse;
+import com.demo.app.dto.ResendActivationDto;
 import com.demo.app.service.AuthService;
 import com.demo.app.dto.ActivateCustomerDto;
 import com.demo.app.dto.CreateCustomerDto;
@@ -38,6 +39,12 @@ public class AuthController {
     @ResponseStatus(HttpStatus.CREATED)
     public boolean activateCustomerAccount(@RequestBody @Valid ActivateCustomerDto customerDto) {
         return authService.activateCustomerAccount(customerDto);
+    }
+
+    @PostMapping("/resend-activation-code")
+    @ResponseStatus(HttpStatus.CREATED)
+    public boolean restoreActivationCode(@RequestBody @Valid ResendActivationDto activationDto) throws MessagingException, FileNotFoundException {
+        return authService.restoreActivationCode(activationDto);
     }
 
 }

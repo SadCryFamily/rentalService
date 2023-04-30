@@ -8,16 +8,29 @@ services:
       - 'POSTGRES_USER=postgres'
       - 'POSTGRES_PASSWORD=0542'
       - 'POSTGRES_DB=project'
+    networks:
+      - 'rental-network'
+
+  redis:
+    image: 'redis'
+    container_name: 'redis_db'
+    command: 'redis-server --requirepass ssdRedisPassword23QFDv5'
+    depends_on:
+      - 'postgres'
+    networks:
+      - 'rental-network'
 
   app:
     build: ./
     container_name: 'spring_main'
-    environment:
-      - 'SPRING_MAIL_HOST: smtp.gmail.com'
-      - 'SPRING_MAIL_PORT: 587'
-      - 'SPRING_MAIL_USERNAME: noreplyrentalroot@gmail.com'
-      - 'SPRING_MAIL_PASSWORD: dujxitmfhqlgdfnu'
-      - 'SPRING_MAIL_PROPERTIES_MAIL_SMTP_AUTH: true'
-      - 'SPRING_MAIL_PROPERTIES_MAIL_SMTP_STARTTLS_ENABLE: true'
+    depends_on:
+      - 'redis'
     ports:
-      - "8080:8080"
+      - '8080:8080'
+    networks:
+      - 'rental-network'
+
+
+networks:
+  rental-network:
+    driver: 'bridge'

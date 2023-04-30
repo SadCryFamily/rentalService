@@ -112,7 +112,7 @@ public class RentalServiceImpl implements RentalService {
         String username = userDetails.getUsername();
         Long customerId = userDetails.getCustomerId();
 
-        if (rentalRepository.existsByCustomerIdAndRentalId(customerId, rentalId).isEmpty()) {
+        if (rentalRepository.findByCustomerIdAndRentalId(customerId, rentalId).isEmpty()) {
             throw new NotCustomerRentalException(ExceptionMessage.NOT_CUSTOMER_RENTAL.getExceptionMessage());
         }
 
@@ -214,7 +214,7 @@ public class RentalServiceImpl implements RentalService {
         String username = userDetails.getUsername();
         Long customerId = userDetails.getCustomerId();
 
-        if (rentalRepository.existsByCustomerIdAndRentalId(customerId, rentalId).isEmpty()) {
+        if (rentalRepository.findByCustomerIdAndRentalId(customerId, rentalId).isEmpty()) {
             throw new DeleteNonExistingRentalException(ExceptionMessage.NON_EXISTED_RENTAL.getExceptionMessage());
         }
 

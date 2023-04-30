@@ -18,6 +18,10 @@ public interface CustomerRepository extends JpaRepository<Customer, Long>, Custo
 
     Customer findByCustomerUsername(String username);
 
+    Customer findByCustomerEmail(String email);
+
+    boolean existsByCustomerEmailAndIsActivatedFalse(String email);
+
     boolean existsByCustomerUsernameAndIsActivatedFalse(String username);
 
 

@@ -38,6 +38,10 @@ public enum ExceptionMessage {
 
     ALREADY_DELETED_CUSTOMER("Given customer already deleted"),
 
+    ALREADY_ACTIVATED_CUSTOMER("Customer already activated by given email"),
+
+    ALREADY_EXIST_CUSTOMER("Customer with username and email already exists"),
+
     LOCKED_CUSTOMER_ACCOUNT("Your account has been locked. Please contact customer support for further assistance."),
 
     WRONG_ACTIVATION_DATA("Activation failed. Check activation code or given customer already activated"),
