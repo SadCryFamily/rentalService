@@ -28,7 +28,7 @@ cd rentalService
 3. Build the application:
 
 ```sh
-./mvnw clean package
+./mvnw clean package -DskipTests
 ```
 4. Run the application in a multiple Docker containers:
 
@@ -36,7 +36,7 @@ cd rentalService
 docker-compose up -d --build
 ```
 
-The application will be launched in multiple Docker containers: one container for the `Spring Boot` application and another one - for `PostgreSQL` database.
+The application will be launched in multiple Docker containers: one container for the `Spring Boot` application, one for `PostgreSQL` database and one more with `Redis` database.
 
 After the application starts, it will be available at http://localhost:8080.
 
@@ -56,6 +56,7 @@ RentalService was created using the following technologies:
 - Spring Boot (Data, JPA, Security)
 - Liquibase 
 - PostgreSQL
+- Redis
 - Docker
 - Docker Compose
 
@@ -68,6 +69,7 @@ The application provides the following endpoints:
 - `POST /signup` - Register a new customer
 - `POST /activate` - Activate new customer
 - `POST /signin` - Authenticate a user and generate an access token (Unavailable while do not activate accout)
+- `POST /resend-activation-code` - Re-send activation code if first was expired
 
 ### Customer
 
@@ -81,4 +83,5 @@ The application provides the following endpoints:
 - `GET /rentals` - Retrieve set of all available rentals
 - `GET /rental/?id=1` - Retrieve specified rental by `1` param
 - `GET /my` - Retrieve set of all customer rentals
+- `PUT /rental?id=1` - Update exising rental by `1` param (Update only customer created rentals)
 - `DELETE /rental/?id=1` - Delete rental by `1` param (Delete only customer created rentals)
