@@ -18,6 +18,10 @@ import java.math.BigDecimal;
 @Builder
 public class ViewRentalDto {
 
+    @Min(value = 1, message = "Id cant be lower than 1")
+    @NotNull(message = "Id cant be null")
+    private Long rentalId;
+
     @NotNull(message = "Photo cant be null")
     private byte[] rentalPhoto;
 
