@@ -22,7 +22,7 @@ public class PreviewRentalDto {
     private Long rentalId;
 
     @NotNull(message = "Photo cant be null")
-    private byte[] rentalPhoto;
+    private String photoUrl;
 
     @NotNull(message = "Name cant be null")
     @Size(min = 4, message = "Name must be longer than 4")

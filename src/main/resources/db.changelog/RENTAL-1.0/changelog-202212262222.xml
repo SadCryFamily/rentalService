@@ -60,7 +60,7 @@
                 <constraints primaryKeyName="pk_rental_id" primaryKey="true"/>
             </column>
 
-            <column name="rental_photo" type="bytea">
+            <column name="photo_url" type="text">
                 <constraints nullable="false"/>
             </column>
 

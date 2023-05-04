@@ -5,6 +5,7 @@ import com.demo.app.dto.PreviewRentalDto;
 import com.demo.app.dto.UpdateRentalDto;
 import com.demo.app.dto.ViewRentalDto;
 import com.demo.app.repository.RentalRepository;
+import com.demo.app.service.FirebaseStorageService;
 import com.demo.app.service.RentalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,8 +23,12 @@ public class RentalController {
 
     @Autowired
     private RentalService rentalService;
+
     @Autowired
     private RentalRepository rentalRepository;
+
+    @Autowired
+    private FirebaseStorageService firebaseStorageService;
 
     @PostMapping(value = "/rental")
     @PreAuthorize(value = "hasRole('USER')")
@@ -70,4 +75,8 @@ public class RentalController {
         return rentalService.deleteRental(rentalId);
     }
 
+    @PostMapping("/test")
+    public String uploadFile(@RequestParam("file") MultipartFile multipartFile) throws IOException {
+        return firebaseStorageService.uploadFile(multipartFile);
+    }
 }
