@@ -35,6 +35,9 @@ public class RentalServiceImpl implements RentalService {
     @Autowired
     private CustomerRepository customerRepository;
 
+    @Autowired
+    private FirebaseStorageService firebaseStorageService;
+
     @Override
     @Transactional
     public CreateRentalDto createRental(CreateRentalDto rentalDto, MultipartFile photo) throws IOException {
@@ -60,7 +63,9 @@ public class RentalServiceImpl implements RentalService {
             if (userDetails.isAccountNonLocked()) {
 
                 Rental rental = rentalMapper.toRental(checkedRentalDto);
-                rental.setRentalPhoto(photo.getBytes());
+
+                String photoUrl = firebaseStorageService.uploadFile(photo);
+                rental.setPhotoUrl(photoUrl);
 
                 rentalRepository.save(rental);
 
@@ -118,7 +123,9 @@ public class RentalServiceImpl implements RentalService {
 
         Rental checkedRental = optionalRental.get();
 
-        checkedRental.setRentalPhoto(photo.getBytes());
+        String updatedUrl = firebaseStorageService.uploadFile(photo);
+
+        checkedRental.setPhotoUrl(updatedUrl);
         checkedRental.setRentalName(rentalDto.getRentalName());
         checkedRental.setRentalDescription(rentalDto.getRentalDescription());
         checkedRental.setRentalPrice(rentalDto.getRentalPrice());

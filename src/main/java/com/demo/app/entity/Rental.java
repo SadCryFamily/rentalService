@@ -23,10 +23,8 @@ public class Rental {
     @Column(name = "rental_id")
     private Long rentalId;
 
-    @Lob
-    @Type(type = "org.hibernate.type.ImageType")
-    @Column(name = "rental_photo")
-    private byte[] rentalPhoto;
+    @Column(name = "photo_url")
+    private String photoUrl;
 
     @Column(name = "rental_name")
     private String rentalName;

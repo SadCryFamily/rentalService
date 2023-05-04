@@ -67,4 +67,13 @@ public class RentalAdvice {
                 new HttpHeaders(), HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(NullPhotoException.class)
+    public ResponseEntity<Map<String, List<String>>> handleNullPhotoException
+            (NullPhotoException e) {
+        List<String> errorsList = Collections.singletonList(e.getMessage());
+
+        return new ResponseEntity<>(ErrorsMapperUtil.getErrorsMap(errorsList),
+                new HttpHeaders(), HttpStatus.BAD_REQUEST);
+    }
+
 }

@@ -40,6 +40,8 @@ public enum ExceptionMessage {
 
     ALREADY_ACTIVATED_CUSTOMER("Customer already activated by given email"),
 
+    NULL_PHOTO("Photo cant be a null"),
+
     ALREADY_EXIST_CUSTOMER("Customer with username and email already exists"),
 
     LOCKED_CUSTOMER_ACCOUNT("Your account has been locked. Please contact customer support for further assistance."),
