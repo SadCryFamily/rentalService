@@ -2,6 +2,12 @@
 
 `RentalService` is a web application that allows users to browse available properties, make reservations for rentals or place offers to purchase properties.
 
+## Setup
+
+Firsty, needs to initialize the mail system setting up the `spring.mail.username`, `spring.mail.password` params with your own values in both `.properties` file.
+
+Secondly, fill up the `firebase.json` file from your `Firebase` account to have an ability to store images.
+
 ## Requirements
 
 To run the application, you need to install the following programs:
@@ -56,6 +62,7 @@ RentalService was created using the following technologies:
 - Spring Boot (Data, JPA, Security)
 - Liquibase 
 - PostgreSQL
+- Firebase Storage
 - Redis
 - Docker
 - Docker Compose
