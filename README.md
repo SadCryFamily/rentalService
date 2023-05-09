@@ -6,7 +6,7 @@
 
 Firsty, needs to initialize the mail system setting up the `spring.mail.username`, `spring.mail.password` params with your own values in both `.properties` file.
 
-Secondly, fill up the `firebase.json` file from your `Firebase` account to have an ability to store images.
+Secondly, fill up the `firebase.json` file and `firebase.bucket.name` from your `Firebase` account to have an ability to store images.
 
 ## Requirements
 
